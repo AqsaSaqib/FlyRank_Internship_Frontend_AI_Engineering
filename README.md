@@ -23,12 +23,12 @@ It is currently a starter setup (README, license, ignore rules, and AI-assistant
 
 ## Internship Goals
 
-These will be updated as FlyRank assigns specific goals. Working aims for this repository:
+During this 2-month FlyRank AI internship as a Front-end AI Engineer Intern:
 
-- Complete assigned tasks to a professional standard
-- Keep the project maintainable and documented
-- Use Git/GitHub with clear, focused commits
-- Use AI coding assistants carefully (see `CLAUDE.md`)
+- Complete assigned front-end and AI engineering tasks to a professional standard
+- Write clear, maintainable code and keep this repository documented as work is added
+- Practice disciplined Git/GitHub workflow (focused commits, reviewable changes)
+- Use AI coding assistants carefully and only in ways that support the assigned work
 
 ## Technology Stack
 
