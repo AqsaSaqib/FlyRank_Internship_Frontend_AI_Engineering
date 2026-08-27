@@ -2,31 +2,44 @@
 .env
 .env.*
 !.env.example
+!.env.*.example
 !.env.sample
+.envrc
+.netrc
 *.pem
 *.key
 *.p12
 *.pfx
 *.crt
+*.keystore
 id_rsa
-id_rsa.pub
+id_dsa
+id_ecdsa
+id_ed25519
 credentials.json
+*-credentials.json
 service-account*.json
 secrets/
 .secrets/
+*.secret
 
 # Node.js
 node_modules/
+jspm_packages/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .pnpm-store/
 .npm/
-.yarn/
-.yarn/cache
 .pnp.*
 .turbo/
+.node_repl_history
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
 
 # Python
 __pycache__/
@@ -42,8 +55,14 @@ pip-delete-this-directory.txt
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.hypothesis/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
 .coverage
 .coverage.*
+coverage.xml
 htmlcov/
 .tox/
 .nox/
@@ -52,18 +71,19 @@ cython_debug/
 # Virtual environments
 .venv/
 venv/
-env/
 ENV/
 virtualenv/
+env.bak/
+venv.bak/
 
 # TypeScript / JavaScript build
 dist/
 build/
 out/
+.output/
 .next/
 .nuxt/
 .svelte-kit/
-.cache/
 .parcel-cache/
 .vite/
 *.tsbuildinfo
@@ -78,14 +98,23 @@ logs/
 *.cache
 .eslintcache
 .stylelintcache
+.rpt2_cache/
+.rts2_cache_*/
 
 # Test / coverage
 coverage/
 .nyc_output/
 
+# Local databases and dumps
+*.sqlite
+*.sqlite3
+*.db
+
 # IDE / editor
 .idea/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
 *.swp
 *.swo
 *~
@@ -113,3 +142,4 @@ temp/
 *.bak
 *.orig
 .local/
+.direnv/

@@ -1,63 +1,65 @@
 # FlyRank AI Internship
 
-Personal repository for work completed during the **FlyRank AI internship**.
+Internship repository for **Aqsa Saqib** at **FlyRank AI**.
 
-This is an initial README stub. Project details, tooling, and task lists will be filled in as the internship progresses.
+GitHub: [AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering](https://github.com/AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering)
 
 ## Project / Repository Overview
 
-This repository will hold internship assignments, experiments, and related documentation.
+This repository holds work completed during the FlyRank AI internship: assignments, documentation, and related experiments.
 
-**Status:** Setup in progress. Application code and project-specific details are not included yet.
+It is currently a starter setup (README, license, ignore rules, and AI-assistant guidelines). Application code will be added as tasks are assigned.
 
 ## FlyRank AI Internship
 
-| | |
+| Field | Details |
 | --- | --- |
 | Intern | Aqsa Saqib |
 | Organization | FlyRank AI |
+| Repository | [FlyRank_Internship_Frontend_AI_Engineering](https://github.com/AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering) |
 | Role | _To be confirmed_ |
-| Focus | _To be confirmed_ (frontend / AI engineering as assigned) |
+| Focus | _To be confirmed_ |
 | Duration | _To be confirmed_ |
 
 ## Internship Goals
 
-Goals will be updated as they are assigned. Initial intent:
+These will be updated as FlyRank assigns specific goals. Working aims for this repository:
 
-- Complete assigned internship tasks to a professional standard
-- Practice clean, maintainable development with version control
-- Apply AI-assisted development carefully (see `CLAUDE.md`)
-- Document progress as work is added to this repository
+- Complete assigned tasks to a professional standard
+- Keep the project maintainable and documented
+- Use Git/GitHub with clear, focused commits
+- Use AI coding assistants carefully (see `CLAUDE.md`)
 
 ## Technology Stack
 
-Not locked in yet. Likely areas based on the internship track:
+Not confirmed yet. This internship may involve **Python** and **Node.js / TypeScript**, so the repository is prepared for both.
 
-- Web / frontend (to be specified)
-- AI-related tooling (to be specified)
-
-Exact languages, frameworks, and services will be listed here when chosen. Do not assume a stack beyond what is present in the repo.
+Frameworks, libraries, and services will be listed here only after they are actually used in the project.
 
 ## Repository Structure
 
 ```
 .
-├── README.md      # This file
+├── README.md      # Project overview and internship notes
 ├── LICENSE        # MIT License
 ├── CLAUDE.md      # Guidelines for AI-assisted development
-└── .gitignore     # Common exclusions for AI/web internships
+└── .gitignore     # Python, Node.js/TypeScript, secrets, and local files
 ```
 
-Folders for source code, tests, and docs will be added as projects start.
+Source, tests, and docs folders will be added when the first project lands.
 
 ## Progress / Tasks
 
 - [x] Initialize internship repository
 - [x] Add README, LICENSE, `.gitignore`, and `CLAUDE.md`
-- [ ] Confirm internship goals and technology stack
-- [ ] Add first assigned project or task
-- [ ] Update this README as structure and stack become clear
+- [ ] Confirm internship goals, role, and technology stack
+- [ ] Add the first assigned project or task
+- [ ] Keep this README in sync as the repository grows
 
----
+Clone this repository:
 
-Questions about how to work in this repo (commits, secrets, AI assistants) are in `CLAUDE.md`.
+```bash
+git clone https://github.com/AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering.git
+```
+
+Working conventions (commits, secrets, AI assistants) are in `CLAUDE.md`.

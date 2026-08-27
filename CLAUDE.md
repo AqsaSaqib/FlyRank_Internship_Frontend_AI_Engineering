@@ -4,18 +4,17 @@ Instructions for humans and coding assistants working in this repository.
 
 ## Project purpose
 
-This is **Aqsa Saqib’s** repository for the **FlyRank AI internship**. It will hold assigned work, documentation, and experiments.
+This is **Aqsa Saqib’s** repository for the **FlyRank AI internship** ([GitHub](https://github.com/AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering)). It will hold assigned work, documentation, and experiments.
 
 Do not invent product names, APIs, intern requirements, or a technology stack that is not already in the repo or clearly stated by Aqsa.
 
 ## Technology-stack conventions
 
-- Use only languages, frameworks, and tools that are already in the project (or that Aqsa explicitly chooses).
-- Prefer the existing package manager, linter, formatter, and test runner when they exist.
+- This repo is prepared for **Python** and **Node.js / TypeScript**. Use only the languages and tools that are actually present, or that Aqsa explicitly chooses.
+- Prefer the existing package manager, linter, formatter, and test runner when they exist (`package-lock.json` / `pnpm-lock.yaml` / `yarn.lock` / `poetry.lock` / `uv.lock` stay committed).
 - Do not add new dependencies unless they are required for the current task and Aqsa agrees.
 - Do not install packages unless asked.
-
-Until a stack is chosen, keep files generic and avoid scaffolding a full app.
+- Until application code exists, keep files generic and do not scaffold a full app.
 
 ## Coding conventions
 
@@ -32,6 +31,7 @@ Until a stack is chosen, keep files generic and avoid scaffolding a full app.
 - Add source, tests, and docs in dedicated folders when the first project starts (for example `src/`, `tests/`, `docs/`). Follow whatever layout Aqsa or FlyRank specifies.
 - Do not dump unrelated files in the root.
 - Do not create extra markdown, configs, or boilerplate unless the task needs them.
+- When behavior or setup changes, update `README.md` (and `.env.example` if environment variables change).
 
 ## Git / GitHub conventions
 
@@ -39,15 +39,16 @@ Until a stack is chosen, keep files generic and avoid scaffolding a full app.
 - Do not commit unless Aqsa asks. They will commit and push themselves.
 - Never force-push to `main` / `master`.
 - Do not change git config.
-- Do not commit secrets, credentials, or `.env` files (see Security).
+- Do not commit secrets, credentials, `.env` files, `node_modules/`, or virtualenvs (see Security and `.gitignore`).
 - Keep PRs small and focused on one task when GitHub is in use.
+- Before suggesting a commit, show `git status` / `git diff` so Aqsa can review.
 
 ## Commit message conventions
 
 When Aqsa asks for a commit message, use a short imperative subject (about 50–72 characters):
 
 - `Add internship README, license, and ignore rules`
-- `Fix broken form validation on contact page`
+- `Fix failing unit tests for assigned task`
 - `Update README with confirmed tech stack`
 
 Explain *why* in the body only if the change is not obvious. Do not use vague messages like `update` or `wip`.
@@ -75,7 +76,7 @@ Explain *why* in the body only if the change is not obvious. Do not use vague me
 - Use `.env.example` (no real values) to document required variables.
 - Do not hardcode secrets in source, comments, notebooks, or README files.
 - Do not paste secrets into chat logs or commit messages.
-- Treat credentials.json, service-account files, and PEM/key files as secret.
+- Treat `credentials.json`, service-account files, and PEM/key files as secret.
 - If a secret is committed by mistake, rotate it; removing it from git history later is not enough.
 
 ## Rules to avoid unnecessary changes
