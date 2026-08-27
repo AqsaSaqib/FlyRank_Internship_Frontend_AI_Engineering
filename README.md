@@ -17,9 +17,9 @@ It is currently a starter setup (README, license, ignore rules, and AI-assistant
 | Intern | Aqsa Saqib |
 | Organization | FlyRank AI |
 | Repository | [FlyRank_Internship_Frontend_AI_Engineering](https://github.com/AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering) |
-| Role | _To be confirmed_ |
-| Focus | _To be confirmed_ |
-| Duration | _To be confirmed_ |
+| Role | _Front-end AI Engineer Intern_ |
+| Focus | _Front-end AI Engineer_ |
+| Duration | _2 Months_ |
 
 ## Internship Goals
 
