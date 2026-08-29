@@ -1,55 +1,69 @@
 /**
  * tests/settingsForm.test.js
  *
- * Automated tests using Node's built-in `node:test` and `node:assert`.
- * Run with: node --test tests/settingsForm.test.js
+ * Automated tests using Node.js built-in `node:test` and `node:assert/strict`.
+ * Run with: npm test (or node --test tests/settingsForm.test.js)
  *
- * Tests cover:
- *   - validateName
- *   - validateEmail
- *   - validatePassword
- *   - validateSelect
- *   - evaluatePasswordStrength
- *   - validateSettingsForm (full form)
- *   - AppState (state store)
+ * Test Suites:
+ *   1. validateName
+ *   2. validateEmail
+ *   3. validateUsername
+ *   4. validatePassword
+ *   5. validatePasswordChange
+ *   6. evaluatePasswordStrength
+ *   7. validateSelect (theme, notifications, visibility, language, timezone, date & time formats)
+ *   8. validateProfileSection
+ *   9. validateAccountSection
+ *  10. validatePrivacySection
+ *  11. validatePreferencesSection
+ *  12. validateSettingsForm (Full form)
+ *  13. AppState (State management & persistence)
  */
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 
-// Import the pure validation functions
+// Pure validation logic and constants
 import {
   validateName,
   validateEmail,
+  validateUsername,
   validatePassword,
+  validatePasswordChange,
   validateSelect,
   evaluatePasswordStrength,
+  validateProfileSection,
+  validateAccountSection,
+  validatePrivacySection,
+  validatePreferencesSection,
   validateSettingsForm,
   THEME_OPTIONS,
   NOTIFICATION_OPTIONS,
+  VISIBILITY_OPTIONS,
+  LANGUAGE_OPTIONS,
+  TIMEZONE_OPTIONS,
+  DATE_FORMAT_OPTIONS,
+  TIME_FORMAT_OPTIONS,
   PASSWORD_MIN_LENGTH,
+  USERNAME_MIN_LENGTH,
+  USERNAME_MAX_LENGTH,
 } from '../js/validation.js';
 
-// Import the state store (uses a localStorage stub below)
+// Reactive state store
 import { appState } from '../js/state.js';
 
-// ── Name Validation ────────────────────────────────────────────────────────
+// ── 1. Name Validation ─────────────────────────────────────────────────────
 
 describe('validateName', () => {
   it('rejects empty string', () => {
     const r = validateName('');
     assert.equal(r.valid, false);
-    assert.ok(r.message.length > 0);
+    assert.match(r.message, /required/i);
   });
 
-  it('rejects null', () => {
-    const r = validateName(null);
-    assert.equal(r.valid, false);
-  });
-
-  it('rejects undefined', () => {
-    const r = validateName(undefined);
-    assert.equal(r.valid, false);
+  it('rejects null and undefined', () => {
+    assert.equal(validateName(null).valid, false);
+    assert.equal(validateName(undefined).valid, false);
   });
 
   it('rejects whitespace-only string', () => {
@@ -58,194 +72,162 @@ describe('validateName', () => {
   });
 
   it('rejects single character', () => {
-    const r = validateName('A');
+    const r = validateName('J');
     assert.equal(r.valid, false);
     assert.match(r.message, /2 characters/i);
   });
 
-  it('accepts two characters', () => {
+  it('rejects name exceeding 80 characters', () => {
+    const longName = 'A'.repeat(81);
+    const r = validateName(longName);
+    assert.equal(r.valid, false);
+    assert.match(r.message, /cannot exceed 80/i);
+  });
+
+  it('accepts minimum 2 characters', () => {
     const r = validateName('Jo');
     assert.equal(r.valid, true);
     assert.equal(r.message, '');
   });
 
-  it('accepts full name with spaces', () => {
-    const r = validateName('Jane Smith');
-    assert.equal(r.valid, true);
+  it('accepts full name with spaces and special characters', () => {
+    assert.equal(validateName('Jane Doe-Smith').valid, true);
+    assert.equal(validateName("O'Connor").valid, true);
   });
 
-  it('accepts name with leading/trailing whitespace (trimmed)', () => {
-    const r = validateName('  Alice  ');
+  it('accepts trimmed name with leading/trailing spaces', () => {
+    const r = validateName('  Jane Doe  ');
     assert.equal(r.valid, true);
   });
 });
 
-// ── Email Validation ───────────────────────────────────────────────────────
+// ── 2. Email Validation ────────────────────────────────────────────────────
 
 describe('validateEmail', () => {
-  it('rejects empty string', () => {
-    const r = validateEmail('');
-    assert.equal(r.valid, false);
-    assert.match(r.message, /required/i);
+  it('rejects empty string, null, and undefined', () => {
+    assert.equal(validateEmail('').valid, false);
+    assert.equal(validateEmail(null).valid, false);
+    assert.equal(validateEmail(undefined).valid, false);
   });
 
-  it('rejects null', () => {
-    const r = validateEmail(null);
-    assert.equal(r.valid, false);
-  });
-
-  it('rejects undefined', () => {
-    const r = validateEmail(undefined);
-    assert.equal(r.valid, false);
-  });
-
-  it('rejects string without @', () => {
-    const r = validateEmail('notanemail');
+  it('rejects string without @ symbol', () => {
+    const r = validateEmail('invalidemail.com');
     assert.equal(r.valid, false);
     assert.match(r.message, /valid email/i);
   });
 
-  it('rejects email with no domain', () => {
-    const r = validateEmail('user@');
-    assert.equal(r.valid, false);
+  it('rejects email missing domain or user part', () => {
+    assert.equal(validateEmail('user@').valid, false);
+    assert.equal(validateEmail('@domain.com').valid, false);
+    assert.equal(validateEmail('user@domain').valid, false);
   });
 
-  it('rejects email with no TLD', () => {
-    const r = validateEmail('user@domain');
-    assert.equal(r.valid, false);
+  it('rejects email containing internal spaces', () => {
+    assert.equal(validateEmail('user name@domain.com').valid, false);
   });
 
-  it('rejects email with spaces', () => {
-    const r = validateEmail('user @example.com');
-    assert.equal(r.valid, false);
+  it('accepts standard valid emails', () => {
+    assert.equal(validateEmail('jane.doe@flyrank.io').valid, true);
+    assert.equal(validateEmail('user+filter@example.co.uk').valid, true);
+    assert.equal(validateEmail('first_last@sub.domain.org').valid, true);
   });
 
-  it('accepts a standard email', () => {
-    const r = validateEmail('user@example.com');
-    assert.equal(r.valid, true);
-    assert.equal(r.message, '');
-  });
-
-  it('accepts email with subdomain', () => {
-    const r = validateEmail('name@mail.example.co.uk');
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts email with plus sign', () => {
-    const r = validateEmail('user+tag@example.com');
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts email with dots in local part', () => {
-    const r = validateEmail('first.last@example.com');
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts email with leading/trailing whitespace (trimmed)', () => {
-    const r = validateEmail('  user@example.com  ');
-    assert.equal(r.valid, true);
+  it('accepts valid email with leading/trailing whitespace (trimmed)', () => {
+    assert.equal(validateEmail('  jane@flyrank.io  ').valid, true);
   });
 });
 
-// ── Password Validation ────────────────────────────────────────────────────
+// ── 3. Username Validation ─────────────────────────────────────────────────
+
+describe('validateUsername', () => {
+  it('rejects empty, null, and undefined', () => {
+    assert.equal(validateUsername('').valid, false);
+    assert.equal(validateUsername(null).valid, false);
+    assert.equal(validateUsername(undefined).valid, false);
+  });
+
+  it(`rejects username shorter than ${USERNAME_MIN_LENGTH} characters`, () => {
+    const r = validateUsername('ab');
+    assert.equal(r.valid, false);
+    assert.match(r.message, /at least 3 characters/i);
+  });
+
+  it(`rejects username longer than ${USERNAME_MAX_LENGTH} characters`, () => {
+    const r = validateUsername('a'.repeat(USERNAME_MAX_LENGTH + 1));
+    assert.equal(r.valid, false);
+    assert.match(r.message, /cannot exceed 20/i);
+  });
+
+  it('rejects invalid characters (spaces, dashes, dots, symbols)', () => {
+    assert.equal(validateUsername('jane-doe').valid, false);
+    assert.equal(validateUsername('jane.doe').valid, false);
+    assert.equal(validateUsername('jane doe').valid, false);
+    assert.equal(validateUsername('jane@doe').valid, false);
+  });
+
+  it('accepts alphanumeric characters and underscores', () => {
+    assert.equal(validateUsername('janedoe').valid, true);
+    assert.equal(validateUsername('jane_doe_99').valid, true);
+    assert.equal(validateUsername('user_123').valid, true);
+  });
+});
+
+// ── 4. Password Validation (Optional Profile Context) ──────────────────────
 
 describe('validatePassword', () => {
-  it('accepts empty password (optional field)', () => {
-    const r = validatePassword('');
-    assert.equal(r.valid, true);
+  it('accepts empty/null/undefined in optional context', () => {
+    assert.equal(validatePassword('').valid, true);
+    assert.equal(validatePassword(null).valid, true);
+    assert.equal(validatePassword(undefined).valid, true);
   });
 
-  it('accepts null password (optional field)', () => {
-    const r = validatePassword(null);
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts undefined password (optional field)', () => {
-    const r = validatePassword(undefined);
-    assert.equal(r.valid, true);
-  });
-
-  it(`rejects password shorter than ${PASSWORD_MIN_LENGTH} chars`, () => {
-    const r = validatePassword('abc');
+  it(`rejects password shorter than ${PASSWORD_MIN_LENGTH} characters`, () => {
+    const r = validatePassword('short');
     assert.equal(r.valid, false);
-    assert.match(r.message, /8 characters/i);
+    assert.match(r.message, /at least 8 characters/i);
   });
 
-  it(`rejects password of exactly ${PASSWORD_MIN_LENGTH - 1} chars`, () => {
-    const r = validatePassword('a'.repeat(PASSWORD_MIN_LENGTH - 1));
-    assert.equal(r.valid, false);
-  });
-
-  it(`accepts password of exactly ${PASSWORD_MIN_LENGTH} chars`, () => {
-    const r = validatePassword('a'.repeat(PASSWORD_MIN_LENGTH));
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts a strong password', () => {
-    const r = validatePassword('Str0ng!Pass#2024');
-    assert.equal(r.valid, true);
+  it('accepts password of exactly 8 characters or more', () => {
+    assert.equal(validatePassword('12345678').valid, true);
+    assert.equal(validatePassword('Super$ecurePassw0rd!').valid, true);
   });
 });
 
-// ── Select Validation ──────────────────────────────────────────────────────
+// ── 5. Password Change Validation ──────────────────────────────────────────
 
-describe('validateSelect (theme)', () => {
-  it('rejects empty string', () => {
-    const r = validateSelect('', THEME_OPTIONS, 'Theme preference');
+describe('validatePasswordChange', () => {
+  it('fails when current password is empty', () => {
+    const r = validatePasswordChange('', 'NewPass123!', 'NewPass123!');
     assert.equal(r.valid, false);
-    assert.match(r.message, /required/i);
+    assert.ok('currentPassword' in r.errors);
   });
 
-  it('rejects invalid option', () => {
-    const r = validateSelect('solarized', THEME_OPTIONS, 'Theme preference');
+  it('fails when new password is shorter than 8 characters', () => {
+    const r = validatePasswordChange('OldPass123!', 'short', 'short');
     assert.equal(r.valid, false);
-    assert.match(r.message, /invalid/i);
+    assert.ok('newPassword' in r.errors);
   });
 
-  it('accepts "light"', () => {
-    const r = validateSelect('light', THEME_OPTIONS, 'Theme preference');
-    assert.equal(r.valid, true);
+  it('fails when new password is identical to current password', () => {
+    const r = validatePasswordChange('SamePass123!', 'SamePass123!', 'SamePass123!');
+    assert.equal(r.valid, false);
+    assert.match(r.errors.newPassword, /must be different/i);
   });
 
-  it('accepts "dark"', () => {
-    const r = validateSelect('dark', THEME_OPTIONS, 'Theme preference');
-    assert.equal(r.valid, true);
+  it('fails when confirmation does not match new password', () => {
+    const r = validatePasswordChange('OldPass123!', 'NewPass123!', 'DifferentPass123!');
+    assert.equal(r.valid, false);
+    assert.match(r.errors.confirmPassword, /does not match/i);
   });
 
-  it('accepts "system"', () => {
-    const r = validateSelect('system', THEME_OPTIONS, 'Theme preference');
+  it('passes when current password, new password (>=8) and matching confirmation are provided', () => {
+    const r = validatePasswordChange('OldPass123!', 'NewSecretPass99!', 'NewSecretPass99!');
     assert.equal(r.valid, true);
+    assert.deepEqual(r.errors, {});
   });
 });
 
-describe('validateSelect (notifications)', () => {
-  it('rejects empty string', () => {
-    const r = validateSelect('', NOTIFICATION_OPTIONS, 'Notification preference');
-    assert.equal(r.valid, false);
-  });
-
-  it('rejects unknown value', () => {
-    const r = validateSelect('weekly', NOTIFICATION_OPTIONS, 'Notification preference');
-    assert.equal(r.valid, false);
-  });
-
-  it('accepts "all"', () => {
-    const r = validateSelect('all', NOTIFICATION_OPTIONS, 'Notification preference');
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts "important"', () => {
-    const r = validateSelect('important', NOTIFICATION_OPTIONS, 'Notification preference');
-    assert.equal(r.valid, true);
-  });
-
-  it('accepts "none"', () => {
-    const r = validateSelect('none', NOTIFICATION_OPTIONS, 'Notification preference');
-    assert.equal(r.valid, true);
-  });
-});
-
-// ── Password Strength ──────────────────────────────────────────────────────
+// ── 6. Password Strength Evaluation ────────────────────────────────────────
 
 describe('evaluatePasswordStrength', () => {
   it('returns score 0 for empty password', () => {
@@ -254,173 +236,216 @@ describe('evaluatePasswordStrength', () => {
     assert.equal(r.label, '');
   });
 
-  it('returns score 1 (Weak) for very short/simple password', () => {
+  it('returns score 1 (Weak) for very simple password', () => {
     const r = evaluatePasswordStrength('abc');
     assert.equal(r.score, 1);
     assert.equal(r.label, 'Weak');
   });
 
-  it('returns score >= 2 for moderate password', () => {
-    const r = evaluatePasswordStrength('password1');
+  it('returns moderate score >= 2 for medium complexity', () => {
+    const r = evaluatePasswordStrength('password123');
     assert.ok(r.score >= 2);
   });
 
-  it('returns score 4 (Strong) for complex password', () => {
-    const r = evaluatePasswordStrength('Str0ng!Pass#2024');
+  it('returns score 4 (Strong) for high complexity password', () => {
+    const r = evaluatePasswordStrength('Str0ng!Pass#2026');
     assert.equal(r.score, 4);
     assert.equal(r.label, 'Strong');
   });
+});
 
-  it('score is always 0 or between 1 and 4', () => {
-    const passwords = ['', 'a', 'password', 'P@ssw0rd!', 'Correct-Horse-Battery-Staple!99'];
-    passwords.forEach(pw => {
-      const { score } = evaluatePasswordStrength(pw);
-      assert.ok(score === 0 || (score >= 1 && score <= 4), `Score ${score} out of range for "${pw}"`);
+// ── 7. Select & Enum Validation ────────────────────────────────────────────
+
+describe('validateSelect Options', () => {
+  it('validates theme options', () => {
+    THEME_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, THEME_OPTIONS, 'Theme').valid, true);
+    });
+    assert.equal(validateSelect('invalid-theme', THEME_OPTIONS, 'Theme').valid, false);
+    assert.equal(validateSelect('', THEME_OPTIONS, 'Theme').valid, false);
+  });
+
+  it('validates notification frequency options', () => {
+    NOTIFICATION_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, NOTIFICATION_OPTIONS, 'Notifications').valid, true);
+    });
+    assert.equal(validateSelect('hourly', NOTIFICATION_OPTIONS, 'Notifications').valid, false);
+  });
+
+  it('validates privacy visibility options', () => {
+    VISIBILITY_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, VISIBILITY_OPTIONS, 'Visibility').valid, true);
+    });
+    assert.equal(validateSelect('hidden', VISIBILITY_OPTIONS, 'Visibility').valid, false);
+  });
+
+  it('validates language options', () => {
+    LANGUAGE_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, LANGUAGE_OPTIONS, 'Language').valid, true);
+    });
+    assert.equal(validateSelect('xx', LANGUAGE_OPTIONS, 'Language').valid, false);
+  });
+
+  it('validates timezone options', () => {
+    TIMEZONE_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, TIMEZONE_OPTIONS, 'Timezone').valid, true);
+    });
+    assert.equal(validateSelect('Mars/Olympus', TIMEZONE_OPTIONS, 'Timezone').valid, false);
+  });
+
+  it('validates date and time formats', () => {
+    DATE_FORMAT_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, DATE_FORMAT_OPTIONS, 'Date format').valid, true);
+    });
+    TIME_FORMAT_OPTIONS.forEach(opt => {
+      assert.equal(validateSelect(opt, TIME_FORMAT_OPTIONS, 'Time format').valid, true);
     });
   });
 });
 
-// ── Full Form Validation ───────────────────────────────────────────────────
+// ── 8. Section Validators ──────────────────────────────────────────────────
+
+describe('Section Validators', () => {
+  it('validateProfileSection verifies name and email', () => {
+    const valid = validateProfileSection({ name: 'Jane Doe', email: 'jane@flyrank.io' });
+    assert.equal(valid.valid, true);
+
+    const invalid = validateProfileSection({ name: '', email: 'not-an-email' });
+    assert.equal(invalid.valid, false);
+    assert.ok(invalid.errors.name);
+    assert.ok(invalid.errors.email);
+  });
+
+  it('validateAccountSection verifies username, language, and timezone', () => {
+    const valid = validateAccountSection({ username: 'janedoe', language: 'en', timezone: 'UTC' });
+    assert.equal(valid.valid, true);
+
+    const invalid = validateAccountSection({ username: 'j', language: 'invalid', timezone: 'invalid' });
+    assert.equal(invalid.valid, false);
+    assert.ok(invalid.errors.username);
+    assert.ok(invalid.errors.language);
+    assert.ok(invalid.errors.timezone);
+  });
+
+  it('validatePrivacySection verifies profile visibility', () => {
+    const valid = validatePrivacySection({ profileVisibility: 'public' });
+    assert.equal(valid.valid, true);
+
+    const invalid = validatePrivacySection({ profileVisibility: 'invalid' });
+    assert.equal(invalid.valid, false);
+    assert.ok(invalid.errors.profileVisibility);
+  });
+
+  it('validatePreferencesSection verifies regional settings', () => {
+    const valid = validatePreferencesSection({
+      language: 'en',
+      timezone: 'UTC',
+      dateFormat: 'YYYY-MM-DD',
+      timeFormat: '24h',
+    });
+    assert.equal(valid.valid, true);
+
+    const invalid = validatePreferencesSection({
+      language: 'bad',
+      timezone: 'bad',
+      dateFormat: 'bad',
+      timeFormat: 'bad',
+    });
+    assert.equal(invalid.valid, false);
+    assert.equal(Object.keys(invalid.errors).length, 4);
+  });
+});
+
+// ── 9. validateSettingsForm (Full Payload) ─────────────────────────────────
 
 describe('validateSettingsForm', () => {
-  const validData = {
-    name: 'Jane Smith',
-    email: 'jane@example.com',
+  const fullValid = {
+    name: 'Jane Doe',
+    email: 'jane@flyrank.io',
     password: '',
     theme: 'system',
     notifications: 'important',
+    username: 'janedoe',
   };
 
-  it('passes with all valid data (no password)', () => {
-    const r = validateSettingsForm(validData);
+  it('passes on valid comprehensive payload', () => {
+    const r = validateSettingsForm(fullValid);
     assert.equal(r.valid, true);
     assert.deepEqual(r.errors, {});
   });
 
-  it('passes with all valid data including a strong password', () => {
-    const r = validateSettingsForm({ ...validData, password: 'Str0ng!Pass' });
-    assert.equal(r.valid, true);
-  });
-
-  it('fails with empty name', () => {
-    const r = validateSettingsForm({ ...validData, name: '' });
-    assert.equal(r.valid, false);
-    assert.ok('name' in r.errors);
-  });
-
-  it('fails with single-char name', () => {
-    const r = validateSettingsForm({ ...validData, name: 'X' });
-    assert.equal(r.valid, false);
-    assert.ok('name' in r.errors);
-  });
-
-  it('fails with empty email', () => {
-    const r = validateSettingsForm({ ...validData, email: '' });
-    assert.equal(r.valid, false);
-    assert.ok('email' in r.errors);
-  });
-
-  it('fails with malformed email', () => {
-    const r = validateSettingsForm({ ...validData, email: 'not-an-email' });
-    assert.equal(r.valid, false);
-    assert.ok('email' in r.errors);
-  });
-
-  it('fails with short password (if provided)', () => {
-    const r = validateSettingsForm({ ...validData, password: 'abc' });
-    assert.equal(r.valid, false);
-    assert.ok('password' in r.errors);
-  });
-
-  it('fails with invalid theme value', () => {
-    const r = validateSettingsForm({ ...validData, theme: 'solarized' });
-    assert.equal(r.valid, false);
-    assert.ok('theme' in r.errors);
-  });
-
-  it('fails with invalid notification value', () => {
-    const r = validateSettingsForm({ ...validData, notifications: 'urgent' });
-    assert.equal(r.valid, false);
-    assert.ok('notifications' in r.errors);
-  });
-
-  it('collects multiple errors simultaneously', () => {
+  it('catches multiple simultaneous validation errors', () => {
     const r = validateSettingsForm({
       name: '',
       email: 'bad-email',
-      password: 'short',
-      theme: 'bad',
-      notifications: 'bad',
+      password: '123',
+      theme: 'neon',
+      notifications: 'daily',
+      username: 'x',
     });
     assert.equal(r.valid, false);
-    assert.ok(Object.keys(r.errors).length >= 4);
-  });
-
-  it('errors object is empty when form is valid', () => {
-    const r = validateSettingsForm(validData);
-    assert.equal(Object.keys(r.errors).length, 0);
+    assert.ok(Object.keys(r.errors).length >= 5);
   });
 });
 
-// ── Reactive State Store ───────────────────────────────────────────────────
+// ── 10. AppState Reactive Store ────────────────────────────────────────────
 
-describe('appState', () => {
-  it('provides default profile state', () => {
-    const name  = appState.get('profile.name');
-    const email = appState.get('profile.email');
-    // After hydration from localStorage (or defaults), these should be strings
-    assert.equal(typeof name,  'string');
-    assert.equal(typeof email, 'string');
+describe('appState Store', () => {
+  it('provides complete defaults across all 7 sections', () => {
+    assert.ok(appState.get('profile.name'));
+    assert.ok(appState.get('account.username'));
+    assert.ok(Array.isArray(appState.get('security.sessions')));
+    assert.ok(appState.get('notifications.frequency'));
+    assert.ok(appState.get('appearance.theme'));
+    assert.ok(appState.get('privacy.profileVisibility'));
+    assert.ok(appState.get('preferences.dateFormat'));
   });
 
-  it('sets and gets a value via dot notation', () => {
-    appState.set('profile.name', 'Test User');
-    assert.equal(appState.get('profile.name'), 'Test User');
+  it('sets and gets deep values using dot notation', () => {
+    appState.set('profile.title', 'Principal Architect');
+    assert.equal(appState.get('profile.title'), 'Principal Architect');
   });
 
-  it('notifies subscribers on set', () => {
-    let notified = false;
-    let receivedPath = null;
-    let receivedValue = null;
+  it('notifies subscribers on state modification', () => {
+    let notifiedPath = null;
+    let notifiedVal = null;
 
-    const unsub = appState.subscribe((path, value) => {
-      notified = true;
-      receivedPath = path;
-      receivedValue = value;
+    const unsub = appState.subscribe((path, val) => {
+      notifiedPath = path;
+      notifiedVal = val;
     });
 
-    appState.set('preferences.theme', 'dark');
+    appState.set('appearance.theme', 'dark');
     unsub();
 
-    assert.equal(notified, true);
-    assert.equal(receivedPath, 'preferences.theme');
-    assert.equal(receivedValue, 'dark');
+    assert.equal(notifiedPath, 'appearance.theme');
+    assert.equal(notifiedVal, 'dark');
   });
 
-  it('unsubscribing stops notifications', () => {
-    let count = 0;
-    const unsub = appState.subscribe(() => { count++; });
-    unsub();
-    appState.set('profile.name', 'Nobody');
-    assert.equal(count, 0);
+  it('handles terminating other sessions', () => {
+    const remaining = appState.terminateOtherSessions();
+    assert.equal(remaining.length, 1);
+    assert.equal(remaining[0].current, true);
   });
 
-  it('returns a snapshot without modifying internal state', () => {
-    appState.set('profile.name', 'Snapshot Test');
-    const snap = appState.snapshot();
-    snap.profile.name = 'Modified';
-    assert.equal(appState.get('profile.name'), 'Snapshot Test');
+  it('handles 2FA toggle updates', () => {
+    appState.toggleTwoFactor(true);
+    assert.equal(appState.get('security.twoFactorEnabled'), true);
+
+    appState.toggleTwoFactor(false);
+    assert.equal(appState.get('security.twoFactorEnabled'), false);
   });
 
-  it('exports JSON without password field', () => {
-    appState.set('security.password', 'secret123');
+  it('exports sanitized JSON without sensitive password field', () => {
+    appState.set('security.password', 'super-secret-pw');
     const json = appState.exportJSON();
     const parsed = JSON.parse(json);
     assert.ok(!parsed.security || !parsed.security.password);
   });
 
-  it('supports nested preferences', () => {
-    appState.set('preferences.notifications', 'all');
-    assert.equal(appState.get('preferences.notifications'), 'all');
+  it('returns an isolated deep clone snapshot', () => {
+    const snap = appState.snapshot();
+    snap.profile.name = 'Tampered Direct Name';
+    assert.notEqual(appState.get('profile.name'), 'Tampered Direct Name');
   });
 });

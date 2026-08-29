@@ -1,8 +1,8 @@
 /* ============================================================
-   BASE – Reset, Typography, Body
+   BASE – Reset, Typography, Body, Focus Management
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -14,6 +14,7 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  color-scheme: light dark;
 }
 
 body {
@@ -26,20 +27,20 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
-/* ---------- Focus Outline ---------- */
+/* ---------- Accessible Focus Ring ---------- */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
-  border-radius: var(--radius-sm);
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
 }
 
 /* ---------- Links ---------- */
 a {
   color: var(--color-primary);
   text-decoration: none;
-  transition: color var(--transition-base);
+  transition: color var(--transition-fast);
 }
 
 a:hover {
@@ -47,27 +48,44 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---------- Typography helpers ---------- */
+/* ---------- Headings & Typography ---------- */
 h1, h2, h3, h4, h5, h6 {
   line-height: var(--lh-tight);
   font-weight: var(--fw-semibold);
   color: var(--color-text);
+  letter-spacing: -0.015em;
 }
 
 p {
   line-height: var(--lh-relaxed);
+  color: var(--color-text-secondary);
 }
 
-/* ---------- Scrollbar ---------- */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: var(--radius-pill);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--color-text-subtle); }
 
-/* ---------- Utility ---------- */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-subtle);
+}
+
+/* ---------- Screen Reader Only ---------- */
 .sr-only {
   position: absolute;
   width: 1px;

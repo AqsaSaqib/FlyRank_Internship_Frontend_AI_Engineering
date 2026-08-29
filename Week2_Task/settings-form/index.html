@@ -1,248 +1,1415 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Manage your FlyRank account settings — profile, security, theme, and notifications." />
-  <title>Settings — FlyRank</title>
+  <meta name="description" content="Manage your FlyRank settings — profile, account, security, notifications, appearance, privacy, and preferences." />
+  <title>Settings Dashboard — FlyRank</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>" />
   <script type="module" src="/main.js"></script>
 </head>
 <body>
 
   <!-- ══════════════════════════════════════════════════
-       PAGE HEADER
+       GLOBAL APPLICATION HEADER
   ══════════════════════════════════════════════════ -->
-  <header class="page-header" role="banner">
-    <a class="page-header__brand" href="/" aria-label="FlyRank home">
-      <div class="page-header__logo" aria-hidden="true">✦</div>
-      <span class="page-header__name">FlyRank</span>
-    </a>
-    <p class="page-header__subtitle">Account Settings</p>
+  <header class="app-header" role="banner">
+    <div class="app-header__left">
+      <!-- Mobile sidebar toggle -->
+      <button
+        id="sidebar-toggle"
+        class="header-icon-btn sidebar-toggle-btn"
+        type="button"
+        aria-label="Open settings navigation"
+        aria-expanded="false"
+        aria-controls="dashboard-sidebar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <a class="app-header__brand" href="#profile" aria-label="FlyRank Home">
+        <div class="app-header__logo" aria-hidden="true">✦</div>
+        <span class="app-header__name">FlyRank</span>
+        <span class="badge badge--pro" aria-label="Pro plan">PRO</span>
+      </a>
+    </div>
+
+    <div class="app-header__right">
+      <!-- Theme quick switcher -->
+      <button
+        id="header-theme-toggle"
+        class="header-icon-btn"
+        type="button"
+        aria-label="Toggle light or dark theme"
+        title="Toggle theme"
+      >
+        <svg class="icon-theme-sun" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="icon-theme-moon" xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- Quick user pill -->
+      <div class="user-pill" aria-label="Current user session">
+        <div class="avatar avatar--sm" id="header-avatar" aria-hidden="true">JD</div>
+        <span class="user-pill__name" id="header-user-name">Jane Doe</span>
+      </div>
+    </div>
   </header>
 
   <!-- ══════════════════════════════════════════════════
-       MAIN CONTENT
+       DASHBOARD CONTAINER
   ══════════════════════════════════════════════════ -->
-  <main class="page-main" id="main-content">
+  <div class="dashboard-layout">
 
-    <h1 class="page-title">Settings</h1>
-    <p class="page-subtitle">Manage your profile, security, and preferences.</p>
+    <!-- Mobile sidebar overlay backdrop -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
 
-    <!-- Success Banner -->
-    <div
-      id="success-banner"
-      class="success-banner"
-      aria-atomic="true"
-    >
-      <span class="success-banner__icon" aria-hidden="true">✓</span>
-      <div class="success-banner__body">
-        <p class="success-banner__title">Settings saved successfully!</p>
-        <p class="success-banner__message">Your changes have been applied and persisted locally.</p>
+    <!-- ── LEFT NAVIGATION SIDEBAR ─────────────────────── -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar" role="navigation" aria-label="Settings navigation">
+      
+      <div class="sidebar-top">
+        <div class="sidebar-user-card">
+          <div class="avatar avatar--md" id="sidebar-avatar" aria-hidden="true">JD</div>
+          <div class="sidebar-user-card__meta">
+            <p class="sidebar-user-card__name" id="sidebar-user-name">Jane Doe</p>
+            <p class="sidebar-user-card__email" id="sidebar-user-email">jane.doe@flyrank.io</p>
+          </div>
+        </div>
+
+        <button
+          id="sidebar-close"
+          class="sidebar-close-btn"
+          type="button"
+          aria-label="Close navigation sidebar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
-      <button
-        id="success-banner-close"
-        class="success-banner__close"
-        aria-label="Dismiss success message"
-        type="button"
-      >×</button>
-    </div>
 
-    <!-- Error Summary -->
-    <div
-      id="error-summary"
-      class="error-summary"
-      aria-atomic="true"
-    >
-      <p class="error-summary__title">
-        <span aria-hidden="true">⚠</span> Please fix the following errors before saving:
-      </p>
-      <ul class="error-summary__list" aria-label="List of form errors"></ul>
-    </div>
+      <nav class="sidebar-nav" aria-label="Settings Sections">
+        <p class="sidebar-nav__heading">Settings Menu</p>
+        <ul class="sidebar-nav__list" role="tablist">
+          
+          <li role="presentation">
+            <button
+              id="tab-profile"
+              class="sidebar-nav__item is-active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="section-profile"
+              data-section="profile"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="sidebar-nav__label">Profile</span>
+            </button>
+          </li>
 
-    <!-- Settings Form -->
-    <form id="settings-form" novalidate aria-label="User settings form">
-      <div class="card">
+          <li role="presentation">
+            <button
+              id="tab-account"
+              class="sidebar-nav__item"
+              role="tab"
+              aria-selected="false"
+              aria-controls="section-account"
+              data-section="account"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <polyline points="17 11 19 13 23 9"></polyline>
+              </svg>
+              <span class="sidebar-nav__label">Account</span>
+              <span class="badge badge--success badge--sm" aria-label="Verified account">Verified</span>
+            </button>
+          </li>
 
-        <!-- ── Section 1: Profile ─────────────────────────────── -->
-        <div class="card-section">
-          <h2 class="card-section__title">Profile &amp; Identity</h2>
+          <li role="presentation">
+            <button
+              id="tab-security"
+              class="sidebar-nav__item"
+              role="tab"
+              aria-selected="false"
+              aria-controls="section-security"
+              data-section="security"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span class="sidebar-nav__label">Security</span>
+              <span class="badge badge--neutral badge--sm" id="sidebar-2fa-badge">2FA Off</span>
+            </button>
+          </li>
 
-          <!-- Avatar preview -->
-          <div class="profile-header" aria-hidden="true">
-            <div class="avatar" id="avatar-preview" aria-label="Your avatar initials">?</div>
-            <div class="profile-header__info">
-              <p class="profile-header__name" id="preview-name">Your Name</p>
-              <p class="profile-header__email" id="preview-email">your@email.com</p>
-            </div>
-          </div>
+          <li role="presentation">
+            <button
+              id="tab-notifications"
+              class="sidebar-nav__item"
+              role="tab"
+              aria-selected="false"
+              aria-controls="section-notifications"
+              data-section="notifications"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="sidebar-nav__label">Notifications</span>
+            </button>
+          </li>
 
-          <!-- Full Name -->
-          <div class="form-group">
-            <label class="form-label" for="field-name">
-              Full Name <span class="required-star" aria-label="required">*</span>
-            </label>
-            <input
-              id="field-name"
-              class="form-input"
-              type="text"
-              name="name"
-              autocomplete="name"
-              placeholder="e.g. Jane Smith"
-              required
-              aria-required="true"
-              aria-describedby="field-name-hint"
-            />
-            <p class="form-hint" id="field-name-hint">Your display name. Minimum 2 characters.</p>
-            <div class="field-error" id="field-name-error" aria-live="polite">
-              <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span></span>
-            </div>
-          </div>
+          <li role="presentation">
+            <button
+              id="tab-appearance"
+              class="sidebar-nav__item"
+              role="tab"
+              aria-selected="false"
+              aria-controls="section-appearance"
+              data-section="appearance"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+              <span class="sidebar-nav__label">Appearance</span>
+            </button>
+          </li>
 
-          <!-- Email -->
-          <div class="form-group">
-            <label class="form-label" for="field-email">
-              Email Address <span class="required-star" aria-label="required">*</span>
-            </label>
-            <input
-              id="field-email"
-              class="form-input"
-              type="email"
-              name="email"
-              autocomplete="email"
-              placeholder="e.g. jane@example.com"
-              required
-              aria-required="true"
-            />
-            <div class="field-error" id="field-email-error" aria-live="polite">
-              <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span></span>
-            </div>
-          </div>
+          <li role="presentation">
+            <button
+              id="tab-privacy"
+              class="sidebar-nav__item"
+              role="tab"
+              aria-selected="false"
+              aria-controls="section-privacy"
+              data-section="privacy"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span class="sidebar-nav__label">Privacy</span>
+            </button>
+          </li>
+
+          <li role="presentation">
+            <button
+              id="tab-preferences"
+              class="sidebar-nav__item"
+              role="tab"
+              aria-selected="false"
+              aria-controls="section-preferences"
+              data-section="preferences"
+              type="button"
+            >
+              <svg class="sidebar-nav__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span class="sidebar-nav__label">Preferences</span>
+            </button>
+          </li>
+
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status" aria-label="System operational status">
+          <span class="system-status__dot" aria-hidden="true"></span>
+          <span class="system-status__text">All services online</span>
         </div>
-
-        <!-- ── Section 2: Security ────────────────────────────── -->
-        <div class="card-section">
-          <h2 class="card-section__title">Security</h2>
-
-          <!-- New Password -->
-          <div class="form-group">
-            <label class="form-label" for="field-password">
-              New Password
-              <span style="font-weight:400; color: var(--color-text-subtle); font-size: var(--text-xs); margin-left: 4px;">(optional)</span>
-            </label>
-            <div class="password-wrapper">
-              <input
-                id="field-password"
-                class="form-input has-toggle"
-                type="password"
-                name="password"
-                autocomplete="new-password"
-                placeholder="Leave blank to keep current password"
-                aria-describedby="field-password-hint"
-              />
-              <button
-                id="password-toggle"
-                class="password-toggle"
-                type="button"
-                aria-label="Show password"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-
-            <!-- Password strength meter -->
-            <div class="password-strength" aria-live="polite" aria-label="Password strength indicator">
-              <div class="strength-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="4">
-                <div class="strength-bar-fill" id="strength-fill"></div>
-              </div>
-              <p class="strength-label" id="strength-label"></p>
-            </div>
-
-            <p class="form-hint" id="field-password-hint">If provided, must be at least 8 characters.</p>
-            <div class="field-error" id="field-password-error" aria-live="polite">
-              <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span></span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── Section 3: Preferences ─────────────────────────── -->
-        <div class="card-section">
-          <h2 class="card-section__title">Preferences</h2>
-
-          <!-- Theme Preference -->
-          <div class="form-group">
-            <label class="form-label" for="field-theme">
-              Theme Preference <span class="required-star" aria-label="required">*</span>
-            </label>
-            <div class="select-wrapper">
-              <select
-                id="field-theme"
-                class="form-select"
-                name="theme"
-                required
-                aria-required="true"
-              >
-                <option value="system">System Default</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-              </select>
-            </div>
-            <div class="field-error" id="field-theme-error" aria-live="polite">
-              <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span></span>
-            </div>
-          </div>
-
-          <!-- Notification Preference -->
-          <div class="form-group">
-            <label class="form-label" for="field-notifications">
-              Notification Preference <span class="required-star" aria-label="required">*</span>
-            </label>
-            <div class="select-wrapper">
-              <select
-                id="field-notifications"
-                class="form-select"
-                name="notifications"
-                required
-                aria-required="true"
-              >
-                <option value="all">All Notifications</option>
-                <option value="important" selected>Important Only</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-            <p class="form-hint">Choose what kinds of notifications you receive by email.</p>
-            <div class="field-error" id="field-notifications-error" aria-live="polite">
-              <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <span></span>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── Form Footer ─────────────────────────────────────── -->
-        <div class="form-footer">
-          <p style="font-size: var(--text-xs); color: var(--color-text-subtle); margin-right: auto;">
-            <span aria-hidden="true">*</span> Required fields
-          </p>
-          <button
-            id="submit-btn"
-            class="btn btn-primary"
-            type="submit"
-          >
-            <div class="btn-spinner" aria-hidden="true"></div>
-            <span class="btn-text">Save Settings</span>
+        <div class="sidebar-actions">
+          <button id="btn-export-json" class="btn btn-ghost btn-sm" type="button" title="Export settings as JSON">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Export JSON
+          </button>
+          <button id="btn-reset-settings" class="btn btn-ghost btn-sm" type="button" title="Reset settings to default">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+            Reset
           </button>
         </div>
+      </div>
 
-      </div><!-- /.card -->
-    </form>
+    </aside>
 
-  </main>
+    <!-- ── MAIN DASHBOARD CONTENT ──────────────────────── -->
+    <main class="dashboard-main" id="main-content">
 
-  <!-- Toast Container (managed by JS) -->
+      <!-- Success Feedback Banner -->
+      <div
+        id="success-banner"
+        class="feedback-banner feedback-banner--success"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div class="feedback-banner__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <div class="feedback-banner__body">
+          <p class="feedback-banner__title" id="success-banner-title">Settings saved successfully!</p>
+          <p class="feedback-banner__message" id="success-banner-desc">Your updates have been securely synchronized and persisted.</p>
+        </div>
+        <button
+          id="success-banner-close"
+          class="feedback-banner__close"
+          type="button"
+          aria-label="Dismiss success message"
+        >×</button>
+      </div>
+
+      <!-- Error Summary Alert -->
+      <div
+        id="error-summary"
+        class="feedback-banner feedback-banner--error"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        tabindex="-1"
+      >
+        <div class="feedback-banner__icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        </div>
+        <div class="feedback-banner__body">
+          <p class="feedback-banner__title">Please resolve the following errors:</p>
+          <ul class="error-summary__list" aria-label="Errors needing attention"></ul>
+        </div>
+        <button
+          id="error-summary-close"
+          class="feedback-banner__close"
+          type="button"
+          aria-label="Dismiss error summary"
+        >×</button>
+      </div>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 1: PROFILE
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-profile"
+        class="settings-section is-active"
+        role="tabpanel"
+        aria-labelledby="tab-profile"
+        tabindex="0"
+      >
+        <div class="section-header">
+          <h1 class="section-title">Profile Information</h1>
+          <p class="section-subtitle">Manage your public persona, display name, and contact information.</p>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="card">
+          <!-- Profile Avatar Preview Header -->
+          <div class="profile-preview-card">
+            <div class="avatar avatar--xl" id="avatar-preview" aria-label="Profile avatar preview">JD</div>
+            <div class="profile-preview-card__info">
+              <div class="profile-preview-card__row">
+                <h2 class="profile-preview-card__name" id="preview-name">Jane Doe</h2>
+                <span class="badge badge--pro">Pro Member</span>
+              </div>
+              <p class="profile-preview-card__email" id="preview-email">jane.doe@flyrank.io</p>
+              <p class="profile-preview-card__title" id="preview-title">Senior Frontend Engineer</p>
+            </div>
+          </div>
+
+          <!-- Profile Form -->
+          <form id="form-profile" class="card-form" novalidate aria-label="Profile settings form">
+            <div class="card-body">
+              
+              <div class="grid grid-2">
+                <!-- Full Name -->
+                <div class="form-group">
+                  <label class="form-label" for="field-name">
+                    Full Name <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <input
+                    id="field-name"
+                    class="form-input"
+                    type="text"
+                    name="name"
+                    autocomplete="name"
+                    placeholder="e.g. Jane Doe"
+                    required
+                    aria-required="true"
+                    aria-describedby="field-name-hint"
+                  />
+                  <p class="form-hint" id="field-name-hint">Your public display name. Minimum 2 characters.</p>
+                  <div class="field-error" id="field-name-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                  <label class="form-label" for="field-email">
+                    Email Address <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <input
+                    id="field-email"
+                    class="form-input"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    placeholder="e.g. jane.doe@flyrank.io"
+                    required
+                    aria-required="true"
+                    aria-describedby="field-email-hint"
+                  />
+                  <p class="form-hint" id="field-email-hint">Used for login, reports, and critical alerts.</p>
+                  <div class="field-error" id="field-email-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Professional Title / Role -->
+              <div class="form-group">
+                <label class="form-label" for="field-title">
+                  Professional Title / Role
+                </label>
+                <input
+                  id="field-title"
+                  class="form-input"
+                  type="text"
+                  name="title"
+                  placeholder="e.g. Lead AI Engineer"
+                  aria-describedby="field-title-hint"
+                />
+                <p class="form-hint" id="field-title-hint">Displayed on team workspaces and shared dashboard reports.</p>
+              </div>
+
+              <!-- Public Bio -->
+              <div class="form-group">
+                <label class="form-label" for="field-bio">
+                  Bio / Profile Information
+                </label>
+                <textarea
+                  id="field-bio"
+                  class="form-textarea"
+                  name="bio"
+                  rows="3"
+                  placeholder="Briefly describe your responsibilities or interests..."
+                  aria-describedby="field-bio-hint"
+                ></textarea>
+                <p class="form-hint" id="field-bio-hint">Max 250 characters. Markdown links supported.</p>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint"><span aria-hidden="true">*</span> Required fields</span>
+              <button id="btn-save-profile" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Save Profile</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 2: ACCOUNT
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-account"
+        class="settings-section"
+        role="tabpanel"
+        aria-labelledby="tab-account"
+        tabindex="0"
+        hidden
+      >
+        <div class="section-header">
+          <h1 class="section-title">Account Settings</h1>
+          <p class="section-subtitle">Manage your account identifier, default locale, and membership tier.</p>
+        </div>
+
+        <!-- Account Status Overview Card -->
+        <div class="card card--subtle mb-lg">
+          <div class="card-body">
+            <div class="account-status-grid">
+              <div class="status-metric">
+                <span class="status-metric__label">Account Status</span>
+                <span class="status-metric__value">
+                  <span class="status-indicator status-indicator--active" aria-hidden="true"></span>
+                  Active
+                </span>
+              </div>
+              <div class="status-metric">
+                <span class="status-metric__label">Current Plan</span>
+                <span class="status-metric__value font-semibold">Pro Plan (Annual)</span>
+              </div>
+              <div class="status-metric">
+                <span class="status-metric__label">Member Since</span>
+                <span class="status-metric__value" id="account-member-since">March 2024</span>
+              </div>
+              <div class="status-metric">
+                <span class="status-metric__label">Verification</span>
+                <span class="badge badge--success">Email Verified</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Details Form -->
+        <div class="card">
+          <form id="form-account" class="card-form" novalidate aria-label="Account details form">
+            <div class="card-body">
+              
+              <!-- Username -->
+              <div class="form-group">
+                <label class="form-label" for="field-username">
+                  Username / Handle <span class="required-star" aria-label="required">*</span>
+                </label>
+                <div class="input-prefix-wrapper">
+                  <span class="input-prefix" aria-hidden="true">@</span>
+                  <input
+                    id="field-username"
+                    class="form-input has-prefix"
+                    type="text"
+                    name="username"
+                    autocomplete="username"
+                    placeholder="janedoe"
+                    required
+                    aria-required="true"
+                    aria-describedby="field-username-hint"
+                  />
+                </div>
+                <p class="form-hint" id="field-username-hint">3–20 characters. Letters, numbers, and underscores only.</p>
+                <div class="field-error" id="field-username-error" aria-live="polite">
+                  <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="grid grid-2">
+                <!-- Language -->
+                <div class="form-group">
+                  <label class="form-label" for="field-account-language">
+                    Account Language <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="field-account-language" class="form-select" name="language" required aria-required="true">
+                      <option value="en">English (US)</option>
+                      <option value="es">Español (Spanish)</option>
+                      <option value="fr">Français (French)</option>
+                      <option value="de">Deutsch (German)</option>
+                      <option value="ja">日本語 (Japanese)</option>
+                      <option value="zh">中文 (Chinese)</option>
+                    </select>
+                  </div>
+                  <div class="field-error" id="field-account-language-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+
+                <!-- Timezone -->
+                <div class="form-group">
+                  <label class="form-label" for="field-account-timezone">
+                    Account Time Zone <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="field-account-timezone" class="form-select" name="timezone" required aria-required="true">
+                      <option value="UTC">UTC (Coordinated Universal Time)</option>
+                      <option value="America/New_York">Eastern Time (US &amp; Canada)</option>
+                      <option value="America/Los_Angeles">Pacific Time (US &amp; Canada)</option>
+                      <option value="Europe/London">London (GMT / BST)</option>
+                      <option value="Europe/Paris">Paris, Berlin, Rome (CET)</option>
+                      <option value="Asia/Tokyo">Tokyo, Osaka (JST)</option>
+                      <option value="Asia/Karachi">Islamabad, Karachi (PKT)</option>
+                    </select>
+                  </div>
+                  <div class="field-error" id="field-account-timezone-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint"><span aria-hidden="true">*</span> Required fields</span>
+              <button id="btn-save-account" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Save Account</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Danger Zone Card -->
+        <div class="card card--danger mt-xl">
+          <div class="card-header">
+            <h2 class="card-title text-danger">Danger Zone</h2>
+            <p class="card-subtitle">Permanent actions regarding your account and associated data.</p>
+          </div>
+          <div class="card-body">
+            <div class="danger-action-row">
+              <div>
+                <p class="font-medium text-main">Deactivate Account</p>
+                <p class="text-sm text-muted">Temporarily disable your profile, workflows, and access tokens.</p>
+              </div>
+              <button id="btn-deactivate-account" class="btn btn-outline-danger btn-sm" type="button">
+                Deactivate
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 3: SECURITY
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-security"
+        class="settings-section"
+        role="tabpanel"
+        aria-labelledby="tab-security"
+        tabindex="0"
+        hidden
+      >
+        <div class="section-header">
+          <h1 class="section-title">Security &amp; Authentication</h1>
+          <p class="section-subtitle">Manage your password, multi-factor authentication, and active browser sessions.</p>
+        </div>
+
+        <!-- Change Password Card -->
+        <div class="card mb-lg">
+          <div class="card-header">
+            <h2 class="card-title">Change Password</h2>
+            <p class="card-subtitle">Update your password regularly to maintain high account security.</p>
+          </div>
+
+          <form id="form-security-password" class="card-form" novalidate aria-label="Change password form">
+            <div class="card-body">
+              
+              <!-- Current Password -->
+              <div class="form-group">
+                <label class="form-label" for="field-current-password">
+                  Current Password <span class="required-star" aria-label="required">*</span>
+                </label>
+                <div class="password-wrapper">
+                  <input
+                    id="field-current-password"
+                    class="form-input has-toggle"
+                    type="password"
+                    name="currentPassword"
+                    autocomplete="current-password"
+                    placeholder="Enter current password"
+                    required
+                    aria-required="true"
+                  />
+                  <button
+                    class="password-toggle"
+                    data-target="field-current-password"
+                    type="button"
+                    aria-label="Show current password"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+                <div class="field-error" id="field-current-password-error" aria-live="polite">
+                  <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="grid grid-2">
+                <!-- New Password -->
+                <div class="form-group">
+                  <label class="form-label" for="field-new-password">
+                    New Password <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="password-wrapper">
+                    <input
+                      id="field-new-password"
+                      class="form-input has-toggle"
+                      type="password"
+                      name="newPassword"
+                      autocomplete="new-password"
+                      placeholder="Minimum 8 characters"
+                      required
+                      aria-required="true"
+                      aria-describedby="field-new-password-hint"
+                    />
+                    <button
+                      class="password-toggle"
+                      data-target="field-new-password"
+                      type="button"
+                      aria-label="Show new password"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+
+                  <!-- Strength Meter -->
+                  <div class="password-strength" aria-live="polite" aria-label="Password strength meter">
+                    <div class="strength-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+                      <div class="strength-bar-fill" id="strength-fill"></div>
+                    </div>
+                    <p class="strength-label" id="strength-label"></p>
+                  </div>
+
+                  <p class="form-hint" id="field-new-password-hint">Use 8+ characters combining uppercase, numbers &amp; symbols.</p>
+                  <div class="field-error" id="field-new-password-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                  <label class="form-label" for="field-confirm-password">
+                    Confirm New Password <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="password-wrapper">
+                    <input
+                      id="field-confirm-password"
+                      class="form-input has-toggle"
+                      type="password"
+                      name="confirmPassword"
+                      autocomplete="new-password"
+                      placeholder="Repeat new password"
+                      required
+                      aria-required="true"
+                    />
+                    <button
+                      class="password-toggle"
+                      data-target="field-confirm-password"
+                      type="button"
+                      aria-label="Show password confirmation"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                  </div>
+                  <div class="field-error" id="field-confirm-password-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint"><span aria-hidden="true">*</span> Required fields</span>
+              <button id="btn-update-password" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Update Password</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Two-Factor Authentication Card -->
+        <div class="card mb-lg">
+          <div class="card-header flex-between">
+            <div>
+              <h2 class="card-title">Two-Factor Authentication (2FA)</h2>
+              <p class="card-subtitle">Add an extra layer of security using an authenticator app (TOTP).</p>
+            </div>
+            <span class="badge badge--neutral" id="twofactor-status-badge">Disabled</span>
+          </div>
+          <div class="card-body">
+            <div class="toggle-card">
+              <div class="toggle-card__meta">
+                <p class="font-medium text-main">Authenticator App (TOTP)</p>
+                <p class="text-sm text-muted">Use 1Password, Google Authenticator, or Authy to generate secure verification codes.</p>
+              </div>
+              <label class="switch-toggle" for="switch-2fa">
+                <input id="switch-2fa" type="checkbox" role="switch" aria-checked="false" />
+                <span class="switch-slider" aria-hidden="true"></span>
+                <span class="sr-only">Enable Two-Factor Authentication</span>
+              </label>
+            </div>
+
+            <div id="twofactor-details" class="twofactor-details mt-md" hidden>
+              <div class="alert-box alert-box--info">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span>Two-Factor Authentication is active. 8 single-use backup codes remain available.</span>
+              </div>
+              <div class="flex-gap-sm mt-sm">
+                <button id="btn-view-backup-codes" class="btn btn-secondary btn-sm" type="button">
+                  View Backup Codes
+                </button>
+                <button id="btn-reconfigure-2fa" class="btn btn-ghost btn-sm" type="button">
+                  Reconfigure 2FA App
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Sessions Card -->
+        <div class="card">
+          <div class="card-header flex-between flex-wrap gap-sm">
+            <div>
+              <h2 class="card-title">Active Login Sessions</h2>
+              <p class="card-subtitle">Devices currently authenticated to your FlyRank account.</p>
+            </div>
+            <button id="btn-logout-other-sessions" class="btn btn-outline-danger btn-sm" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Log Out All Other Sessions
+            </button>
+          </div>
+          <div class="card-body p-0">
+            <ul class="sessions-list" id="sessions-list" aria-label="List of active login sessions">
+              <!-- Dynamically rendered sessions -->
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 4: NOTIFICATIONS
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-notifications"
+        class="settings-section"
+        role="tabpanel"
+        aria-labelledby="tab-notifications"
+        tabindex="0"
+        hidden
+      >
+        <div class="section-header">
+          <h1 class="section-title">Notification Preferences</h1>
+          <p class="section-subtitle">Customize delivery channels, alert frequencies, and event subscriptions.</p>
+        </div>
+
+        <div class="card">
+          <form id="form-notifications" class="card-form" novalidate aria-label="Notification preferences form">
+            <div class="card-body">
+              
+              <!-- Delivery Frequency -->
+              <div class="form-group mb-xl">
+                <label class="form-label" for="field-notifications-freq">
+                  Global Email Frequency <span class="required-star" aria-label="required">*</span>
+                </label>
+                <div class="select-wrapper">
+                  <select id="field-notifications-freq" class="form-select" name="frequency" required aria-required="true">
+                    <option value="all">All Notifications — Real-time instant delivery</option>
+                    <option value="important" selected>Important Only — Security &amp; critical alerts only</option>
+                    <option value="none">None — Pause all non-essential notification emails</option>
+                  </select>
+                </div>
+                <p class="form-hint">Controls how often automated digests and updates are batched.</p>
+                <div class="field-error" id="field-notifications-freq-error" aria-live="polite">
+                  <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <h2 class="card-section__title">Email Subscriptions</h2>
+
+              <!-- Toggle: Security Alerts -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Security Alerts &amp; Suspicious Activity</p>
+                  <p class="text-sm text-muted">Receive instant alerts on new device logins and password modifications.</p>
+                </div>
+                <label class="switch-toggle" for="switch-notif-security">
+                  <input id="switch-notif-security" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Security Alerts</span>
+                </label>
+              </div>
+
+              <!-- Toggle: Product Updates -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Product &amp; Feature Announcements</p>
+                  <p class="text-sm text-muted">Get early access previews and changelog release notifications.</p>
+                </div>
+                <label class="switch-toggle" for="switch-notif-product">
+                  <input id="switch-notif-product" type="checkbox" role="switch" aria-checked="false" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Product &amp; Feature Announcements</span>
+                </label>
+              </div>
+
+              <!-- Toggle: Weekly Digest -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Weekly Performance Digest</p>
+                  <p class="text-sm text-muted">A Monday morning breakdown of ranking trends and team activity.</p>
+                </div>
+                <label class="switch-toggle" for="switch-notif-digest">
+                  <input id="switch-notif-digest" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Weekly Performance Digest</span>
+                </label>
+              </div>
+
+              <!-- Toggle: Mentions -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Team Comments &amp; Mentions</p>
+                  <p class="text-sm text-muted">Notify me whenever a team member tags me on dashboard insights.</p>
+                </div>
+                <label class="switch-toggle" for="switch-notif-mentions">
+                  <input id="switch-notif-mentions" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Team Comments &amp; Mentions</span>
+                </label>
+              </div>
+
+              <div class="divider"></div>
+
+              <h2 class="card-section__title">Browser &amp; In-App Notifications</h2>
+
+              <!-- Push Notifications -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Push Notifications</p>
+                  <p class="text-sm text-muted">Show desktop browser popups when urgent alerts trigger.</p>
+                </div>
+                <label class="switch-toggle" for="switch-notif-push">
+                  <input id="switch-notif-push" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Push Notifications</span>
+                </label>
+              </div>
+
+              <!-- Sound Alerts -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Sound Alerts</p>
+                  <p class="text-sm text-muted">Play a subtle chime on incoming high-priority notifications.</p>
+                </div>
+                <label class="switch-toggle" for="switch-notif-sound">
+                  <input id="switch-notif-sound" type="checkbox" role="switch" aria-checked="false" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Sound Alerts</span>
+                </label>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint"><span aria-hidden="true">*</span> Required fields</span>
+              <button id="btn-save-notifications" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Save Notifications</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 5: APPEARANCE
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-appearance"
+        class="settings-section"
+        role="tabpanel"
+        aria-labelledby="tab-appearance"
+        tabindex="0"
+        hidden
+      >
+        <div class="section-header">
+          <h1 class="section-title">Appearance &amp; Theme</h1>
+          <p class="section-subtitle">Customize the visual theme, contrast, and layout density for your workspace.</p>
+        </div>
+
+        <div class="card">
+          <form id="form-appearance" class="card-form" novalidate aria-label="Appearance preferences form">
+            <div class="card-body">
+              
+              <h2 class="card-section__title">Interface Theme</h2>
+              <p class="text-sm text-muted mb-md">Select your preferred color theme or match your operating system settings.</p>
+
+              <!-- Theme Cards Selection -->
+              <div class="theme-cards-grid" role="radiogroup" aria-label="Color theme selection">
+                
+                <!-- System Theme Option -->
+                <label class="theme-card is-selected" for="theme-opt-system">
+                  <input
+                    id="theme-opt-system"
+                    type="radio"
+                    name="theme"
+                    value="system"
+                    checked
+                  />
+                  <div class="theme-card__preview theme-preview--system" aria-hidden="true">
+                    <div class="theme-preview__half theme-preview__half--light"></div>
+                    <div class="theme-preview__half theme-preview__half--dark"></div>
+                  </div>
+                  <div class="theme-card__body">
+                    <div class="theme-card__title-row">
+                      <span class="theme-card__name">System Default</span>
+                      <span class="theme-card__check" aria-hidden="true">✓</span>
+                    </div>
+                    <p class="theme-card__desc">Automatically synchronizes with your device settings.</p>
+                  </div>
+                </label>
+
+                <!-- Light Theme Option -->
+                <label class="theme-card" for="theme-opt-light">
+                  <input
+                    id="theme-opt-light"
+                    type="radio"
+                    name="theme"
+                    value="light"
+                  />
+                  <div class="theme-card__preview theme-preview--light" aria-hidden="true">
+                    <div class="theme-preview__bar"></div>
+                    <div class="theme-preview__content">
+                      <div class="theme-preview__box"></div>
+                      <div class="theme-preview__box"></div>
+                    </div>
+                  </div>
+                  <div class="theme-card__body">
+                    <div class="theme-card__title-row">
+                      <span class="theme-card__name">Light Theme</span>
+                      <span class="theme-card__check" aria-hidden="true">✓</span>
+                    </div>
+                    <p class="theme-card__desc">Crisp, clean ivory slate background with high readability.</p>
+                  </div>
+                </label>
+
+                <!-- Dark Theme Option -->
+                <label class="theme-card" for="theme-opt-dark">
+                  <input
+                    id="theme-opt-dark"
+                    type="radio"
+                    name="theme"
+                    value="dark"
+                  />
+                  <div class="theme-card__preview theme-preview--dark" aria-hidden="true">
+                    <div class="theme-preview__bar"></div>
+                    <div class="theme-preview__content">
+                      <div class="theme-preview__box"></div>
+                      <div class="theme-preview__box"></div>
+                    </div>
+                  </div>
+                  <div class="theme-card__body">
+                    <div class="theme-card__title-row">
+                      <span class="theme-card__name">Dark Theme</span>
+                      <span class="theme-card__check" aria-hidden="true">✓</span>
+                    </div>
+                    <p class="theme-card__desc">Deep slate theme optimized for low-light environments.</p>
+                  </div>
+                </label>
+
+              </div>
+
+              <div class="divider"></div>
+
+              <h2 class="card-section__title">Display Options</h2>
+
+              <!-- Compact Mode Toggle -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Compact Density Mode</p>
+                  <p class="text-sm text-muted">Reduces table padding and card margins for higher information density.</p>
+                </div>
+                <label class="switch-toggle" for="switch-compact-mode">
+                  <input id="switch-compact-mode" type="checkbox" role="switch" aria-checked="false" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Compact Density Mode</span>
+                </label>
+              </div>
+
+              <!-- High Contrast Toggle -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">High Contrast Borders</p>
+                  <p class="text-sm text-muted">Increases border definition and text contrast for enhanced visual accessibility.</p>
+                </div>
+                <label class="switch-toggle" for="switch-high-contrast">
+                  <input id="switch-high-contrast" type="checkbox" role="switch" aria-checked="false" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">High Contrast Borders</span>
+                </label>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint">Changes apply immediately</span>
+              <button id="btn-save-appearance" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Save Appearance</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 6: PRIVACY
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-privacy"
+        class="settings-section"
+        role="tabpanel"
+        aria-labelledby="tab-privacy"
+        tabindex="0"
+        hidden
+      >
+        <div class="section-header">
+          <h1 class="section-title">Privacy &amp; Data Governance</h1>
+          <p class="section-subtitle">Control your visibility, sharing preferences, and telemetry data.</p>
+        </div>
+
+        <div class="card">
+          <form id="form-privacy" class="card-form" novalidate aria-label="Privacy settings form">
+            <div class="card-body">
+              
+              <!-- Profile Visibility -->
+              <div class="form-group mb-xl">
+                <label class="form-label" for="field-profile-visibility">
+                  Profile Visibility <span class="required-star" aria-label="required">*</span>
+                </label>
+                <div class="select-wrapper">
+                  <select id="field-profile-visibility" class="form-select" name="profileVisibility" required aria-required="true">
+                    <option value="public">Public — Visible to all FlyRank workspace members</option>
+                    <option value="contacts">Team &amp; Contacts Only — Visible to confirmed collaborators</option>
+                    <option value="private">Private — Hidden from search directory and leaderboards</option>
+                  </select>
+                </div>
+                <p class="form-hint">Determines who can see your activity stats and shared reports.</p>
+                <div class="field-error" id="field-profile-visibility-error" aria-live="polite">
+                  <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <h2 class="card-section__title">Data Sharing Preferences</h2>
+
+              <!-- Share Analytics -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Share Anonymous Telemetry &amp; Usage</p>
+                  <p class="text-sm text-muted">Helps our engineering team optimize performance and fix bugs faster.</p>
+                </div>
+                <label class="switch-toggle" for="switch-privacy-analytics">
+                  <input id="switch-privacy-analytics" type="checkbox" role="switch" aria-checked="false" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Share Anonymous Telemetry</span>
+                </label>
+              </div>
+
+              <!-- Personalized Recommendations -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Personalized AI Insights</p>
+                  <p class="text-sm text-muted">Allow FlyRank AI to tailor SEO suggestions based on your search queries.</p>
+                </div>
+                <label class="switch-toggle" for="switch-privacy-ai">
+                  <input id="switch-privacy-ai" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Personalized AI Insights</span>
+                </label>
+              </div>
+
+              <div class="divider"></div>
+
+              <h2 class="card-section__title">Activity &amp; Presence</h2>
+
+              <!-- Online Presence -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Show Online Activity Status</p>
+                  <p class="text-sm text-muted">Indicate to active team members when you are actively working in the dashboard.</p>
+                </div>
+                <label class="switch-toggle" for="switch-privacy-status">
+                  <input id="switch-privacy-status" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Show Online Activity Status</span>
+                </label>
+              </div>
+
+              <!-- Search Indexing -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Allow Search Engine Indexing</p>
+                  <p class="text-sm text-muted">Include your public developer portfolio page in search engine results.</p>
+                </div>
+                <label class="switch-toggle" for="switch-privacy-search">
+                  <input id="switch-privacy-search" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Allow Search Engine Indexing</span>
+                </label>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint"><span aria-hidden="true">*</span> Required fields</span>
+              <button id="btn-save-privacy" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Save Privacy</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════
+           SECTION 7: PREFERENCES
+      ════════════════════════════════════════════════ -->
+      <section
+        id="section-preferences"
+        class="settings-section"
+        role="tabpanel"
+        aria-labelledby="tab-preferences"
+        tabindex="0"
+        hidden
+      >
+        <div class="section-header">
+          <h1 class="section-title">Application Preferences</h1>
+          <p class="section-subtitle">Fine-tune regional date formats, time zones, default landing tabs, and editor behaviors.</p>
+        </div>
+
+        <div class="card">
+          <form id="form-preferences" class="card-form" novalidate aria-label="Application preferences form">
+            <div class="card-body">
+              
+              <div class="grid grid-2">
+                <!-- Primary Language -->
+                <div class="form-group">
+                  <label class="form-label" for="field-pref-language">
+                    Primary Language <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="field-pref-language" class="form-select" name="language" required aria-required="true">
+                      <option value="en">English (United States)</option>
+                      <option value="es">Español (Spain / Latin America)</option>
+                      <option value="fr">Français (France)</option>
+                      <option value="de">Deutsch (Germany)</option>
+                      <option value="ja">日本語 (Japan)</option>
+                      <option value="zh">中文 (Simplified Chinese)</option>
+                    </select>
+                  </div>
+                  <div class="field-error" id="field-pref-language-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+
+                <!-- Time Zone -->
+                <div class="form-group">
+                  <label class="form-label" for="field-pref-timezone">
+                    Time Zone <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="field-pref-timezone" class="form-select" name="timezone" required aria-required="true">
+                      <option value="UTC">UTC (Universal Coordinated Time)</option>
+                      <option value="America/New_York">Eastern Time (US / New York)</option>
+                      <option value="America/Los_Angeles">Pacific Time (US / Los Angeles)</option>
+                      <option value="Europe/London">London (GMT / BST)</option>
+                      <option value="Europe/Paris">Paris / Berlin (CET)</option>
+                      <option value="Asia/Tokyo">Tokyo (JST)</option>
+                      <option value="Asia/Karachi">Karachi / Islamabad (PKT)</option>
+                    </select>
+                  </div>
+                  <div class="field-error" id="field-pref-timezone-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-2">
+                <!-- Date Format -->
+                <div class="form-group">
+                  <label class="form-label" for="field-pref-dateformat">
+                    Date Display Format <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="field-pref-dateformat" class="form-select" name="dateFormat" required aria-required="true">
+                      <option value="YYYY-MM-DD">YYYY-MM-DD (e.g. 2026-08-29)</option>
+                      <option value="DD/MM/YYYY">DD/MM/YYYY (e.g. 29/08/2026)</option>
+                      <option value="MM/DD/YYYY">MM/DD/YYYY (e.g. 08/29/2026)</option>
+                    </select>
+                  </div>
+                  <div class="field-error" id="field-pref-dateformat-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+
+                <!-- Time Format -->
+                <div class="form-group">
+                  <label class="form-label" for="field-pref-timeformat">
+                    Time Display Format <span class="required-star" aria-label="required">*</span>
+                  </label>
+                  <div class="select-wrapper">
+                    <select id="field-pref-timeformat" class="form-select" name="timeFormat" required aria-required="true">
+                      <option value="24h">24-hour clock (e.g. 14:30)</option>
+                      <option value="12h">12-hour clock (e.g. 02:30 PM)</option>
+                    </select>
+                  </div>
+                  <div class="field-error" id="field-pref-timeformat-error" aria-live="polite">
+                    <svg class="field-error__icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <!-- Default Start Page -->
+              <div class="form-group">
+                <label class="form-label" for="field-pref-startpage">
+                  Default Settings Landing Section
+                </label>
+                <div class="select-wrapper">
+                  <select id="field-pref-startpage" class="form-select" name="startPage">
+                    <option value="profile">Profile Overview</option>
+                    <option value="account">Account &amp; Status</option>
+                    <option value="security">Security &amp; 2FA</option>
+                    <option value="notifications">Notification Feeds</option>
+                    <option value="appearance">Appearance &amp; Theme</option>
+                    <option value="privacy">Privacy &amp; Sharing</option>
+                    <option value="preferences">Application Preferences</option>
+                  </select>
+                </div>
+                <p class="form-hint">The active panel displayed upon navigating to Settings.</p>
+              </div>
+
+              <!-- Auto-save Toggle -->
+              <div class="toggle-card">
+                <div class="toggle-card__meta">
+                  <p class="font-medium text-main">Auto-Save Drafts Locally</p>
+                  <p class="text-sm text-muted">Automatically cache unsaved form drafts in browser storage to prevent data loss.</p>
+                </div>
+                <label class="switch-toggle" for="switch-pref-autosave">
+                  <input id="switch-pref-autosave" type="checkbox" role="switch" checked aria-checked="true" />
+                  <span class="switch-slider" aria-hidden="true"></span>
+                  <span class="sr-only">Auto-Save Drafts Locally</span>
+                </label>
+              </div>
+
+            </div>
+
+            <div class="card-footer">
+              <span class="card-footer__hint"><span aria-hidden="true">*</span> Required fields</span>
+              <button id="btn-save-preferences" class="btn btn-primary" type="submit">
+                <span class="btn-spinner" aria-hidden="true"></span>
+                <span class="btn-text">Save Preferences</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       ACCESSIBLE MODAL: 2FA SETUP (SIMULATED)
+  ══════════════════════════════════════════════════ -->
+  <dialog id="modal-2fa" class="modal-dialog" aria-labelledby="modal-2fa-title">
+    <div class="modal-dialog__content">
+      <div class="modal-dialog__header">
+        <h2 class="modal-dialog__title" id="modal-2fa-title">Two-Factor Authentication Setup</h2>
+        <button id="modal-2fa-close" class="modal-dialog__close-btn" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-dialog__body">
+        <p class="text-sm text-muted mb-md">Scan this QR code with your authenticator app (Google Authenticator, Authy, or 1Password):</p>
+        
+        <div class="qr-code-placeholder" aria-label="Simulated QR Code">
+          <div class="qr-grid" aria-hidden="true">
+            <span class="qr-corner qr-corner--tl"></span>
+            <span class="qr-corner qr-corner--tr"></span>
+            <span class="qr-corner qr-corner--bl"></span>
+            <span class="qr-center">✦ FlyRank 2FA ✦</span>
+          </div>
+        </div>
+
+        <div class="secret-key-box mt-md">
+          <span class="text-xs text-muted">Manual Entry Key:</span>
+          <code class="font-mono text-sm font-semibold">JBSW-Y3DP-EKCP-3VKO</code>
+        </div>
+
+        <div class="form-group mt-lg">
+          <label class="form-label" for="field-2fa-code">Enter 6-digit Code from Authenticator</label>
+          <input
+            id="field-2fa-code"
+            class="form-input text-center font-mono font-bold"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="123456"
+            aria-describedby="field-2fa-code-hint"
+          />
+          <p class="form-hint" id="field-2fa-code-hint">Enter any 6 numbers to confirm simulator setup.</p>
+        </div>
+      </div>
+      <div class="modal-dialog__footer">
+        <button id="btn-cancel-2fa" class="btn btn-secondary" type="button">Cancel</button>
+        <button id="btn-confirm-2fa" class="btn btn-primary" type="button">Verify &amp; Activate 2FA</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ══════════════════════════════════════════════════
+       ACCESSIBLE MODAL: CONFIRM DEACTIVATE
+  ══════════════════════════════════════════════════ -->
+  <dialog id="modal-deactivate" class="modal-dialog" aria-labelledby="modal-deactivate-title">
+    <div class="modal-dialog__content">
+      <div class="modal-dialog__header">
+        <h2 class="modal-dialog__title text-danger" id="modal-deactivate-title">Deactivate Account?</h2>
+        <button id="modal-deactivate-close" class="modal-dialog__close-btn" type="button" aria-label="Close dialog">×</button>
+      </div>
+      <div class="modal-dialog__body">
+        <p class="text-sm text-secondary mb-sm">Are you sure you want to deactivate your FlyRank account?</p>
+        <p class="text-sm text-muted">Your active rank tracking, automated audits, and API integrations will be paused immediately. You can re-activate at any time by logging in.</p>
+      </div>
+      <div class="modal-dialog__footer">
+        <button id="btn-cancel-deactivate" class="btn btn-secondary" type="button">Cancel</button>
+        <button id="btn-confirm-deactivate" class="btn btn-danger" type="button">Yes, Deactivate</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ══════════════════════════════════════════════════
+       TOAST NOTIFICATIONS CONTAINER
+  ══════════════════════════════════════════════════ -->
   <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
 
 </body>

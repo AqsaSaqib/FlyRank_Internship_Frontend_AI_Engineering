@@ -1,88 +1,172 @@
 /* ============================================================
-   RESPONSIVE – Mobile-first breakpoints
+   RESPONSIVE – Breakpoints, Mobile Drawer & Adaptability
    ============================================================ */
 
-/* ── Tablet / Narrow Desktop (≤ 768px) ─────────────────── */
+/* ── Large Screens & Desktops (≥ 1025px) ─────────────────── */
+@media (min-width: 1025px) {
+  .dashboard-sidebar {
+    transform: none !important;
+  }
+}
+
+/* ── Tablet & Laptop (≤ 1024px) ──────────────────────────── */
+@media (max-width: 1024px) {
+  .sidebar-toggle-btn {
+    display: flex;
+  }
+
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    z-index: 200;
+    box-shadow: var(--shadow-xl);
+    transform: translateX(-100%);
+    border-right: none;
+  }
+
+  .dashboard-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 190;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+  }
+
+  .sidebar-backdrop.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .dashboard-main {
+    padding: var(--space-xl) var(--space-lg);
+  }
+}
+
+/* ── Mobile Landscape & Tablets (≤ 768px) ────────────────── */
 @media (max-width: 768px) {
-  .page-header {
+  .app-header {
+    padding: 0 var(--space-md);
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .theme-cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .account-status-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .danger-action-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .session-item {
+    flex-direction: column;
+    align-items: flex-start;
     padding: var(--space-md);
   }
 
-  .page-header__subtitle {
-    display: none;
-  }
-
-  .page-main {
-    padding: var(--space-xl) var(--space-md);
-  }
-
-  .page-title {
-    font-size: var(--text-2xl);
-  }
-
-  .card-section {
-    padding: var(--space-lg);
-  }
-
-  .form-footer {
-    padding: var(--space-lg);
+  .session-item .badge {
+    align-self: flex-start;
   }
 
   .toast-container {
-    bottom: var(--space-md);
-    right: var(--space-md);
     left: var(--space-md);
+    right: var(--space-md);
+    bottom: var(--space-md);
   }
 
   .toast {
+    min-width: unset;
     max-width: 100%;
   }
 }
 
-/* ── Mobile (≤ 480px) ───────────────────────────────────── */
+/* ── Mobile Small (≤ 480px) ──────────────────────────────── */
 @media (max-width: 480px) {
-  .page-header__name {
-    font-size: var(--text-base);
+  .app-header__name {
+    display: none;
   }
 
-  .page-main {
-    padding: var(--space-lg) var(--space-md);
+  .user-pill__name {
+    display: none;
   }
 
-  .page-title {
+  .user-pill {
+    padding: 2px;
+  }
+
+  .dashboard-main {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  .section-title {
     font-size: var(--text-xl);
   }
 
-  .page-subtitle {
-    font-size: var(--text-sm);
+  .section-subtitle {
+    font-size: var(--text-xs);
   }
 
-  .card-section {
+  .card-header,
+  .card-body,
+  .card-footer,
+  .profile-preview-card {
     padding: var(--space-md);
   }
 
-  .form-footer {
-    flex-direction: column-reverse;
-    align-items: stretch;
-    gap: var(--space-sm);
-    padding: var(--space-md);
+  .profile-preview-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 
-  .btn {
-    width: 100%;
+  .profile-preview-card__row {
     justify-content: center;
   }
 
-  .profile-header {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+  .account-status-grid {
+    grid-template-columns: 1fr;
   }
-}
 
-/* ── Large screens (≥ 1024px) ───────────────────────────── */
-@media (min-width: 1024px) {
-  .page-main {
-    padding-top: var(--space-3xl);
+  .card-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--space-sm);
+  }
+
+  .card-footer .btn {
+    width: 100%;
+  }
+
+  .card-footer__hint {
+    text-align: center;
+  }
+
+  .toggle-card {
+    flex-direction: row;
+    align-items: center;
   }
 }
