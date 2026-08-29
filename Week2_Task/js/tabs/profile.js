@@ -4,8 +4,17 @@
 
 import { appState } from '../state.js';
 import { toast } from '../toast.js';
+import { initSettingsForm } from '../settingsForm.js';
 
 export function initProfileTab() {
+  // Initialize the User Settings Form
+  initSettingsForm({
+    onSaveSuccess: (data) => {
+      const p = appState.get('profile') || {};
+      updateAvatarDisplay(p.avatar, p.firstName, p.lastName);
+    }
+  });
+
   const avatarInput = document.getElementById('avatar-file-input');
   const avatarDropzone = document.getElementById('avatar-dropzone');
   const avatarPreview = document.getElementById('avatar-preview-img');

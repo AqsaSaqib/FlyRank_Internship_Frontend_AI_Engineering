@@ -8,10 +8,12 @@ export const DEFAULT_SETTINGS = {
   profile: {
     avatar: '',
     initials: 'AS',
+    name: 'Alex Sterling',
     firstName: 'Alex',
     lastName: 'Sterling',
     username: 'alexsterling',
     email: 'alex.sterling@flyrank.ai',
+    notificationPreference: 'all',
     backupEmail: 'alex.personal@gmail.com',
     phone: '+1 (555) 234-5678',
     bio: 'Lead Frontend & AI Engineer designing intuitive human-AI interfaces.',
@@ -100,9 +102,11 @@ class StateStore {
 
   loadFromStorage() {
     try {
-      const serialized = localStorage.getItem(STORAGE_KEY);
-      if (serialized) {
-        return JSON.parse(serialized);
+      if (typeof localStorage !== 'undefined') {
+        const serialized = localStorage.getItem(STORAGE_KEY);
+        if (serialized) {
+          return JSON.parse(serialized);
+        }
       }
     } catch (e) {
       console.warn('Could not read settings from localStorage, using defaults', e);
@@ -113,7 +117,9 @@ class StateStore {
   saveToStorage() {
     try {
       this.savedState = JSON.parse(JSON.stringify(this.currentState));
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.savedState));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.savedState));
+      }
       this.setDirty(false);
       this.notifyListeners();
       return true;

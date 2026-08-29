@@ -9,8 +9,9 @@ class ToastManager {
   }
 
   init() {
+    if (typeof document === 'undefined' || !document.body || typeof document.body.appendChild !== 'function') return;
     let container = document.getElementById('toast-container');
-    if (!container) {
+    if (!container && typeof document.createElement === 'function') {
       container = document.createElement('div');
       container.id = 'toast-container';
       container.className = 'toast-container';
@@ -21,6 +22,7 @@ class ToastManager {
 
   show({ type = 'success', title = 'Success', message = '', duration = 4000, action = null }) {
     if (!this.container) this.init();
+    if (typeof document === 'undefined' || !this.container || typeof this.container.appendChild !== 'function') return { dismiss: () => {} };
 
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
@@ -41,11 +43,11 @@ class ToastManager {
       <button class="toast-close" aria-label="Close notification">&times;</button>
     `;
 
-    if (window.lucide) {
+    if (typeof window !== 'undefined' && window.lucide) {
       window.lucide.createIcons({ root: toast });
     }
 
-    const closeBtn = toast.querySelector('.toast-close');
+    const closeBtn = typeof toast.querySelector === 'function' ? toast.querySelector('.toast-close') : null;
     const dismiss = () => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(-10px)';
@@ -55,7 +57,9 @@ class ToastManager {
       }, 200);
     };
 
-    closeBtn.addEventListener('click', dismiss);
+    if (closeBtn && typeof closeBtn.addEventListener === 'function') {
+      closeBtn.addEventListener('click', dismiss);
+    }
 
     if (duration > 0) {
       setTimeout(dismiss, duration);

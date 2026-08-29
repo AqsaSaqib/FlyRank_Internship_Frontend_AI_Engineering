@@ -4,6 +4,7 @@
 
 export const SETTINGS_INDEX = [
   // Profile
+  { id: 'user-settings', tab: 'profile', title: 'User Settings (Name, Email, Notifications)', desc: 'Configure your display name, contact email, and notification preference', target: '#user-settings-card' },
   { id: 'profile-avatar', tab: 'profile', title: 'Profile Avatar & Photo', desc: 'Upload, crop, or remove account picture', target: '#avatar-section' },
   { id: 'profile-name', tab: 'profile', title: 'Full Name & Display Name', desc: 'First and last name used across workspace', target: '#profile-fullname-group' },
   { id: 'profile-handle', tab: 'profile', title: 'Username & Handle', desc: 'Unique handle @username for mentions', target: '#profile-username-group' },

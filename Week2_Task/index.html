@@ -199,6 +199,106 @@
             </div>
           </div>
 
+          <!-- User Settings Form Card -->
+          <div class="settings-card" id="user-settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>User Settings</h3>
+                <p>Manage your account name, contact email address, and notification preferences.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <form id="user-settings-form" class="settings-form" novalidate>
+                <!-- Form Alert Status Banner -->
+                <div id="settings-form-alert" class="form-status-alert" role="status" aria-live="polite" style="display: none;"></div>
+
+                <div class="form-grid-2">
+                  <!-- Name Field -->
+                  <div class="form-group" id="group-settings-name">
+                    <label class="form-label" for="settings-name">
+                      <span>Name <span class="required-indicator" aria-hidden="true">*</span></span>
+                    </label>
+                    <div class="input-wrapper has-icon-left">
+                      <i data-lucide="user" class="input-icon-left" aria-hidden="true"></i>
+                      <input 
+                        type="text" 
+                        id="settings-name" 
+                        name="name" 
+                        class="form-input" 
+                        placeholder="e.g. Alex Sterling" 
+                        required 
+                        minlength="2" 
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="settings-name-hint settings-name-error"
+                      >
+                    </div>
+                    <span id="settings-name-hint" class="form-hint">Required (minimum 2 characters).</span>
+                    <span id="settings-name-error" class="form-error" role="alert" aria-live="polite"></span>
+                  </div>
+
+                  <!-- Email Field -->
+                  <div class="form-group" id="group-settings-email">
+                    <label class="form-label" for="settings-email">
+                      <span>Email <span class="required-indicator" aria-hidden="true">*</span></span>
+                    </label>
+                    <div class="input-wrapper has-icon-left">
+                      <i data-lucide="mail" class="input-icon-left" aria-hidden="true"></i>
+                      <input 
+                        type="email" 
+                        id="settings-email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="e.g. alex.sterling@flyrank.ai" 
+                        required 
+                        aria-required="true"
+                        aria-invalid="false"
+                        aria-describedby="settings-email-hint settings-email-error"
+                      >
+                    </div>
+                    <span id="settings-email-hint" class="form-hint">Required (must be a valid email address).</span>
+                    <span id="settings-email-error" class="form-error" role="alert" aria-live="polite"></span>
+                  </div>
+                </div>
+
+                <!-- Notification Preference Field -->
+                <div class="form-group" id="group-settings-pref" style="margin-top: var(--space-4);">
+                  <label class="form-label" for="settings-notification-pref">
+                    <span>Notification Preference <span class="required-indicator" aria-hidden="true">*</span></span>
+                  </label>
+                  <div class="input-wrapper has-icon-left">
+                    <i data-lucide="bell" class="input-icon-left" aria-hidden="true"></i>
+                    <select 
+                      id="settings-notification-pref" 
+                      name="notificationPreference" 
+                      class="form-select" 
+                      required 
+                      aria-required="true"
+                      aria-invalid="false"
+                      aria-describedby="settings-pref-hint settings-pref-error"
+                    >
+                      <option value="" disabled>-- Select notification preference --</option>
+                      <option value="all">All Notifications (Email, Push, In-App)</option>
+                      <option value="important">Important Only (Security & Account)</option>
+                      <option value="mentions">Mentions & Direct Alerts Only</option>
+                      <option value="none">Do Not Disturb (Mute All)</option>
+                    </select>
+                  </div>
+                  <span id="settings-pref-hint" class="form-hint">Select your preferred notification delivery tier.</span>
+                  <span id="settings-pref-error" class="form-error" role="alert" aria-live="polite"></span>
+                </div>
+
+                <!-- Form Footer with Save Changes Button -->
+                <div class="settings-card-footer" style="margin-top: var(--space-6);">
+                  <button type="submit" id="settings-save-btn" class="btn btn-primary btn-sm" aria-label="Save Changes">
+                    <i data-lucide="save" style="width: 14px; height: 14px;" aria-hidden="true"></i>
+                    <span>Save Changes</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
           <!-- Personal Information Card -->
           <div class="settings-card">
             <div class="settings-card-header">
