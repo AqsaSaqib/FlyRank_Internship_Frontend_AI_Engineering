@@ -1,0 +1,136 @@
+/* ==========================================================================
+   RESPONSIVE DESIGN & MOBILE DRAWER
+   ========================================================================== */
+
+/* Mobile Menu Toggle Button (Hidden on Desktop) */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: var(--space-2);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+}
+
+.mobile-menu-btn:hover {
+  background: var(--bg-surface-subtle);
+}
+
+/* Tablet & Mobile Breakpoint */
+@media (max-width: 960px) {
+  .app-header {
+    padding: 0 var(--space-4);
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-container {
+    grid-template-columns: 1fr;
+    padding: var(--space-4) var(--space-4) calc(var(--space-12) + 70px);
+  }
+
+  /* Sidebar Drawer on Mobile */
+  .settings-sidebar {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 290px;
+    height: 100vh;
+    max-height: 100vh;
+    background: var(--bg-surface);
+    z-index: 90;
+    box-shadow: var(--shadow-xl);
+    padding: var(--space-6) var(--space-4);
+    transition: left var(--transition-normal);
+    border-right: 1px solid var(--border-subtle);
+  }
+
+  .settings-sidebar.mobile-open {
+    left: 0;
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    backdrop-filter: blur(4px);
+    z-index: 85;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-normal);
+  }
+
+  .sidebar-backdrop.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .form-grid-2,
+  .form-grid-3,
+  .theme-selector-grid,
+  .plan-tier-grid,
+  .ai-model-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .unsaved-bar {
+    width: calc(100% - 32px);
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+    padding: var(--space-4);
+  }
+
+  .unsaved-bar-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .unsaved-bar-actions .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-center {
+    display: none;
+  }
+
+  .brand-badge {
+    display: none;
+  }
+
+  .settings-card {
+    padding: var(--space-4);
+  }
+
+  .avatar-upload-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .avatar-btn-row {
+    justify-content: center;
+  }
+
+  .req-checklist {
+    grid-template-columns: 1fr;
+  }
+
+  .toast-container {
+    top: auto;
+    bottom: 24px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .toast {
+    min-width: unset;
+    width: 100%;
+  }
+}

@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="indigo" data-density="default">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings Dashboard | FlyRank AI</title>
+  <meta name="description" content="Comprehensive, modular, and high-performance settings form and dashboard for FlyRank AI applications.">
+
+  <!-- Google Fonts: Plus Jakarta Sans, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Top Sticky Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation drawer">
+          <i data-lucide="menu" style="width: 22px; height: 22px;"></i>
+        </button>
+        <div class="brand-logo">
+          <i data-lucide="sparkles" style="width: 20px; height: 20px;"></i>
+        </div>
+        <div>
+          <span class="brand-title">FlyRank</span>
+          <span class="brand-badge">Console</span>
+        </div>
+      </div>
+
+      <!-- Global Fuzzy Search Bar -->
+      <div class="header-center">
+        <div class="search-wrapper">
+          <div class="search-input-box">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="global-search-input" class="search-input" placeholder="Search settings, AI params, security..." autocomplete="off">
+            <span class="search-kbd">Ctrl K</span>
+          </div>
+          <div id="search-results-dropdown" class="search-results-dropdown"></div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-outline btn-sm" id="export-settings-btn" title="Download backup of all settings">
+          <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+          <span>Backup JSON</span>
+        </button>
+        <div class="avatar-preview-wrap" style="width: 38px; height: 38px; border-width: 2px; cursor: pointer;" title="Alex Sterling">
+          <span class="avatar-initials" style="font-size: 14px;">AS</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+      <!-- Sidebar Navigation -->
+      <aside id="settings-sidebar" class="settings-sidebar">
+        <div class="nav-group-title">User & Workspace</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-item-btn active" data-tab="profile">
+              <div class="nav-item-left">
+                <i data-lucide="user" class="nav-item-icon"></i>
+                <span>Profile & Identity</span>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="appearance">
+              <div class="nav-item-left">
+                <i data-lucide="palette" class="nav-item-icon"></i>
+                <span>Appearance & Theme</span>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="security">
+              <div class="nav-item-left">
+                <i data-lucide="shield-check" class="nav-item-icon"></i>
+                <span>Security & 2FA</span>
+              </div>
+              <span class="nav-badge-alert" title="Review sessions"></span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="notifications">
+              <div class="nav-item-left">
+                <i data-lucide="bell" class="nav-item-icon"></i>
+                <span>Notifications & Alerts</span>
+              </div>
+            </button>
+          </li>
+        </ul>
+
+        <div class="nav-group-title">AI & Platform</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-item-btn" data-tab="ai">
+              <div class="nav-item-left">
+                <i data-lucide="bot" class="nav-item-icon"></i>
+                <span>AI Models & Prompt</span>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="apiKeys">
+              <div class="nav-item-left">
+                <i data-lucide="key" class="nav-item-icon"></i>
+                <span>API Keys & Webhooks</span>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="billing">
+              <div class="nav-item-left">
+                <i data-lucide="credit-card" class="nav-item-icon"></i>
+                <span>Billing & Usage</span>
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="danger">
+              <div class="nav-item-left">
+                <i data-lucide="alert-octagon" class="nav-item-icon" style="color: var(--color-danger);"></i>
+                <span>Data & Danger Zone</span>
+              </div>
+            </button>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Main Content Settings Panes -->
+      <main class="settings-main">
+        <!-- ===================================================================
+             TAB 1: PROFILE & PERSONAL DETAILS
+             =================================================================== -->
+        <section id="tab-profile" class="tab-pane active">
+          <div class="pane-header">
+            <h2 class="pane-title">Profile & Identity</h2>
+            <p class="pane-description">Manage your personal information, avatar, workplace credentials, and public persona.</p>
+          </div>
+
+          <!-- Profile Completion Widget -->
+          <div class="profile-completion-bar" style="margin-bottom: var(--density-gap);">
+            <div style="display: flex; justify-content: space-between; font-size: var(--font-xs); font-weight: 700;">
+              <span>Profile Strength</span>
+              <span id="profile-completion-text" style="color: var(--accent-primary);">100% Completed</span>
+            </div>
+            <div class="progress-track">
+              <div id="profile-completion-fill" class="progress-fill" style="width: 100%;"></div>
+            </div>
+          </div>
+
+          <!-- Avatar Section -->
+          <div id="avatar-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Profile Picture</h3>
+                <p>Upload a high-resolution photo or drag and drop an image file (PNG, JPG, max 3MB).</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div id="avatar-dropzone" class="avatar-upload-container">
+                <div class="avatar-preview-wrap">
+                  <img id="avatar-preview-img" class="avatar-img" src="" alt="Avatar preview" style="display: none;">
+                  <span id="avatar-initials" class="avatar-initials">AS</span>
+                  <label for="avatar-file-input" class="avatar-overlay-btn" title="Change photo">
+                    <i data-lucide="camera" style="width: 24px; height: 24px;"></i>
+                  </label>
+                </div>
+                <div class="avatar-actions-info">
+                  <div class="avatar-btn-row">
+                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                    <label for="avatar-file-input" class="btn btn-secondary btn-sm" style="cursor: pointer;">
+                      <i data-lucide="upload" style="width: 14px; height: 14px;"></i>
+                      <span>Upload New Image</span>
+                    </label>
+                    <button type="button" id="remove-avatar-btn" class="btn btn-outline btn-sm" style="display: none;">
+                      <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                      <span>Remove</span>
+                    </button>
+                  </div>
+                  <span class="form-hint">Supports PNG, JPG, GIF, WebP up to 3MB. Recommended size 400x400px.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Personal Information Card -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Personal Information</h3>
+                <p>These details will be displayed across your team workspace and comments.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div id="profile-fullname-group" class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="profile-first-name">First Name</label>
+                  <input type="text" id="profile-first-name" class="form-input" placeholder="e.g. Alex">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile-last-name">Last Name</label>
+                  <input type="text" id="profile-last-name" class="form-input" placeholder="e.g. Sterling">
+                </div>
+              </div>
+
+              <div id="profile-username-group" class="form-group">
+                <label class="form-label" for="profile-username">
+                  <span>Username / Handle</span>
+                  <span class="badge badge-success"><i data-lucide="check" style="width:12px;height:12px;"></i> Available</span>
+                </label>
+                <div class="input-wrapper has-icon-left">
+                  <span class="input-icon-left" style="font-weight: 700; color: var(--text-muted);">@</span>
+                  <input type="text" id="profile-username" class="form-input" placeholder="username">
+                </div>
+                <span class="form-hint">Your public URL: flyrank.ai/@alexsterling</span>
+              </div>
+
+              <div id="profile-email-group" class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="profile-email">Work Email</label>
+                  <div class="input-wrapper has-icon-left">
+                    <i data-lucide="mail" class="input-icon-left"></i>
+                    <input type="email" id="profile-email" class="form-input" placeholder="work@flyrank.ai">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile-backup-email">Recovery Email</label>
+                  <div class="input-wrapper has-icon-left">
+                    <i data-lucide="mail-plus" class="input-icon-left"></i>
+                    <input type="email" id="profile-backup-email" class="form-input" placeholder="personal@gmail.com">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="profile-job-title">Job Title</label>
+                  <input type="text" id="profile-job-title" class="form-input" placeholder="e.g. Lead Frontend AI Engineer">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile-organization">Organization</label>
+                  <input type="text" id="profile-organization" class="form-input" placeholder="e.g. FlyRank Technologies">
+                </div>
+              </div>
+
+              <div id="profile-bio-group" class="form-group">
+                <label class="form-label" for="profile-bio">Bio & Headline</label>
+                <textarea id="profile-bio" class="form-textarea" maxlength="300" placeholder="Brief summary of your background and expertise..."></textarea>
+                <div id="bio-char-count" class="char-counter">0 / 300</div>
+              </div>
+
+              <div id="profile-locale-group" class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="profile-timezone">Timezone</label>
+                  <select id="profile-timezone" class="form-select">
+                    <option value="America/New_York">Eastern Time (US & Canada) (UTC-05:00)</option>
+                    <option value="America/Chicago">Central Time (US & Canada) (UTC-06:00)</option>
+                    <option value="America/Los_Angeles">Pacific Time (US & Canada) (UTC-08:00)</option>
+                    <option value="Europe/London">London (UTC+00:00)</option>
+                    <option value="Europe/Berlin">Berlin, Paris (UTC+01:00)</option>
+                    <option value="Asia/Karachi">Islamabad, Karachi (UTC+05:00)</option>
+                    <option value="Asia/Tokyo">Tokyo, Osaka (UTC+09:00)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="profile-language">Preferred Language</label>
+                  <select id="profile-language" class="form-select">
+                    <option value="en-US">English (United States)</option>
+                    <option value="en-GB">English (United Kingdom)</option>
+                    <option value="de-DE">Deutsch</option>
+                    <option value="fr-FR">Français</option>
+                    <option value="es-ES">Español</option>
+                    <option value="ja-JP">日本語</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 2: APPEARANCE & THEME
+             =================================================================== -->
+        <section id="tab-appearance" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">Appearance & Interface</h2>
+            <p class="pane-description">Customize themes, brand accents, font scaling, and interface accessibility.</p>
+          </div>
+
+          <!-- Theme Mode -->
+          <div id="theme-mode-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Interface Theme</h3>
+                <p>Choose your preferred interface appearance or synchronize with your OS settings.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="theme-selector-grid">
+                <div class="theme-card-option" data-theme-val="light">
+                  <div class="theme-preview-box light-preview">
+                    <div class="mock-sidebar"></div>
+                    <div class="mock-body">
+                      <div class="mock-line"></div>
+                      <div class="mock-line short"></div>
+                    </div>
+                  </div>
+                  <span class="theme-card-title">Light Mode</span>
+                </div>
+
+                <div class="theme-card-option active" data-theme-val="dark">
+                  <div class="theme-preview-box dark-preview">
+                    <div class="mock-sidebar"></div>
+                    <div class="mock-body">
+                      <div class="mock-line"></div>
+                      <div class="mock-line short"></div>
+                    </div>
+                  </div>
+                  <span class="theme-card-title">Dark Mode</span>
+                </div>
+
+                <div class="theme-card-option" data-theme-val="system">
+                  <div class="theme-preview-box system-preview"></div>
+                  <span class="theme-card-title">System Sync</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accent Colors -->
+          <div id="accent-color-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Accent Color</h3>
+                <p>Select a vibrant primary accent color applied across buttons, active states, and highlights.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="swatch-picker">
+                <button class="swatch-btn swatch-indigo active" data-accent-val="indigo" title="Electric Indigo"></button>
+                <button class="swatch-btn swatch-emerald" data-accent-val="emerald" title="Emerald Green"></button>
+                <button class="swatch-btn swatch-violet" data-accent-val="violet" title="Royal Violet"></button>
+                <button class="swatch-btn swatch-rose" data-accent-val="rose" title="Cyber Rose"></button>
+                <button class="swatch-btn swatch-amber" data-accent-val="amber" title="Sunset Amber"></button>
+                <button class="swatch-btn swatch-cyan" data-accent-val="cyan" title="Ocean Cyan"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- UI Density & Font Scaling -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Layout & Typography Scaling</h3>
+                <p>Adjust the density of buttons and cards, and tune overall text sizing.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div id="ui-density-section" class="form-group">
+                <label class="form-label">UI Density</label>
+                <div class="segmented-control">
+                  <button type="button" class="segment-btn" data-density-val="compact">
+                    <i data-lucide="align-justify" style="width:14px;height:14px;"></i>
+                    <span>Compact</span>
+                  </button>
+                  <button type="button" class="segment-btn active" data-density-val="default">
+                    <i data-lucide="layout" style="width:14px;height:14px;"></i>
+                    <span>Default</span>
+                  </button>
+                  <button type="button" class="segment-btn" data-density-val="comfortable">
+                    <i data-lucide="maximize" style="width:14px;height:14px;"></i>
+                    <span>Comfortable</span>
+                  </button>
+                </div>
+              </div>
+
+              <div id="font-scale-section" class="slider-group">
+                <div class="slider-header">
+                  <label class="form-label" for="font-scale-slider">Text Size Scaling</label>
+                  <span id="font-scale-value" class="slider-value-badge">100%</span>
+                </div>
+                <div class="range-slider-wrapper">
+                  <input type="range" id="font-scale-slider" class="custom-range" min="0.85" max="1.20" step="0.05" value="1.0">
+                </div>
+                <div class="slider-ticks">
+                  <span>85% (Small)</span>
+                  <span>100% (Default)</span>
+                  <span>120% (Large)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accessibility -->
+          <div id="motion-settings-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Accessibility & Motion</h3>
+                <p>Fine-tune motion effects and visual contrast for reduced eye strain.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">Reduce Motion</span>
+                  <span class="toggle-desc">Minimizes animations, transitions, and pulsing indicator glow effects.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-reduce-motion">
+                  <span class="slider-round"></span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">High Contrast Mode</span>
+                  <span class="toggle-desc">Enhances text contrast and border outlines for maximum readability.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-high-contrast">
+                  <span class="slider-round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 3: SECURITY & 2FA
+             =================================================================== -->
+        <section id="tab-security" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">Security & Authentication</h2>
+            <p class="pane-description">Strengthen password protection, configure Two-Factor Authentication, and manage active sessions.</p>
+          </div>
+
+          <!-- Password Change Card -->
+          <div id="password-change-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Change Password</h3>
+                <p>Ensure your account is using a long, random password that you do not reuse elsewhere.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="form-group">
+                <label class="form-label" for="current-password">Current Password</label>
+                <div class="input-wrapper has-icon-left">
+                  <i data-lucide="lock" class="input-icon-left"></i>
+                  <input type="password" id="current-password" class="form-input" placeholder="••••••••••••">
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="new-password">New Password</label>
+                  <div class="input-wrapper has-icon-left">
+                    <i data-lucide="key-round" class="input-icon-left"></i>
+                    <input type="password" id="new-password" class="form-input" placeholder="Minimum 8 characters">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="confirm-password">Confirm New Password</label>
+                  <div class="input-wrapper has-icon-left">
+                    <i data-lucide="check-check" class="input-icon-left"></i>
+                    <input type="password" id="confirm-password" class="form-input" placeholder="Re-enter password">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dynamic Password Strength Visualizer -->
+              <div class="strength-meter-wrap">
+                <div class="strength-label-text">
+                  <span id="password-strength-text" style="color: var(--text-secondary);">Password Strength</span>
+                </div>
+                <div id="password-strength-bars" class="strength-bars">
+                  <div class="strength-bar"></div>
+                  <div class="strength-bar"></div>
+                  <div class="strength-bar"></div>
+                  <div class="strength-bar"></div>
+                </div>
+              </div>
+
+              <!-- Requirements Checklist -->
+              <div class="req-checklist">
+                <div id="req-length" class="req-item"><i data-lucide="circle" style="width:12px;height:12px;"></i> At least 8 characters</div>
+                <div id="req-upper" class="req-item"><i data-lucide="circle" style="width:12px;height:12px;"></i> Contains uppercase letter (A-Z)</div>
+                <div id="req-number" class="req-item"><i data-lucide="circle" style="width:12px;height:12px;"></i> Contains a number (0-9)</div>
+                <div id="req-special" class="req-item"><i data-lucide="circle" style="width:12px;height:12px;"></i> Special character (!@#$%^&*)</div>
+              </div>
+            </div>
+            <div class="settings-card-footer">
+              <button type="button" id="update-password-btn" class="btn btn-primary btn-sm">
+                <i data-lucide="shield-check" style="width:14px;height:14px;"></i>
+                Update Password
+              </button>
+            </div>
+          </div>
+
+          <!-- Two-Factor Authentication -->
+          <div id="two-factor-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                  <h3>Two-Factor Authentication (2FA)</h3>
+                  <span id="two-factor-status-badge" class="badge badge-success">2FA Enabled</span>
+                </div>
+                <p>Add an extra layer of security using an authenticator app (Google Authenticator, 1Password, Authy).</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-two-factor" checked>
+                <span class="slider-round"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Active Sessions -->
+          <div id="sessions-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Active Browser Sessions</h3>
+                <p>Review logged-in devices. If you see an unrecognized device, revoke its access immediately.</p>
+              </div>
+              <button type="button" id="revoke-all-sessions-btn" class="btn btn-outline btn-sm">
+                <i data-lucide="log-out" style="width:14px;height:14px;"></i>
+                Revoke All Others
+              </button>
+            </div>
+            <div class="settings-card-body">
+              <div id="active-sessions-list" style="display: flex; flex-direction: column; gap: var(--space-3);"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 4: NOTIFICATIONS & ALERTS
+             =================================================================== -->
+        <section id="tab-notifications" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">Notifications & Alerts</h2>
+            <p class="pane-description">Choose what updates you receive and control delivery channels for email, push, and SMS.</p>
+          </div>
+
+          <!-- Channel Matrix Card -->
+          <div id="notif-matrix-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Notification Preferences Matrix</h3>
+                <p>Granular controls per category and communication channel.</p>
+              </div>
+              <div style="display: flex; gap: var(--space-2);">
+                <button type="button" id="enable-all-notifs-btn" class="btn btn-outline btn-sm">Enable All</button>
+                <button type="button" id="mute-all-notifs-btn" class="btn btn-outline btn-sm">Mute Optional</button>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="matrix-table-wrap">
+                <table class="matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Notification Category</th>
+                      <th class="matrix-center">Email</th>
+                      <th class="matrix-center">Push</th>
+                      <th class="matrix-center">In-App</th>
+                      <th class="matrix-center">SMS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div style="font-weight:600; color:var(--text-primary);">Product Updates & Releases</div>
+                        <div style="font-size:var(--font-xs); color:var(--text-muted);">Major feature releases and AI model upgrades</div>
+                      </td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="productUpdates" data-notif-type="email" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="productUpdates" data-notif-type="push" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="productUpdates" data-notif-type="inapp" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="productUpdates" data-notif-type="sms"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div style="font-weight:600; color:var(--text-primary); display:flex; align-items:center; gap:6px;">
+                          Security & Login Alerts
+                          <span class="badge badge-warning">High Priority</span>
+                        </div>
+                        <div style="font-size:var(--font-xs); color:var(--text-muted);">New device logins and API key changes</div>
+                      </td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="securityAlerts" data-notif-type="email" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="securityAlerts" data-notif-type="push" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="securityAlerts" data-notif-type="inapp" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="securityAlerts" data-notif-type="sms" checked></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div style="font-weight:600; color:var(--text-primary);">Team Mentions & Comments</div>
+                        <div style="font-size:var(--font-xs); color:var(--text-muted);">When a colleague mentions @alexsterling</div>
+                      </td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="teamMentions" data-notif-type="email" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="teamMentions" data-notif-type="push" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="teamMentions" data-notif-type="inapp" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="teamMentions" data-notif-type="sms"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div style="font-weight:600; color:var(--text-primary);">Weekly Analytics & Token Digest</div>
+                        <div style="font-size:var(--font-xs); color:var(--text-muted);">Summary of workspace token consumption</div>
+                      </td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="analyticsDigest" data-notif-type="email" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="analyticsDigest" data-notif-type="push"></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="analyticsDigest" data-notif-type="inapp" checked></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="analyticsDigest" data-notif-type="sms"></td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div style="font-weight:600; color:var(--text-primary);">Marketing & Surveys</div>
+                        <div style="font-size:var(--font-xs); color:var(--text-muted);">Product feedback questionnaires and events</div>
+                      </td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="marketing" data-notif-type="email"></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="marketing" data-notif-type="push"></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="marketing" data-notif-type="inapp"></td>
+                      <td class="matrix-center"><input type="checkbox" data-notif-cat="marketing" data-notif-type="sms"></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quiet Hours -->
+          <div id="quiet-hours-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Quiet Hours Scheduler</h3>
+                <p>Mute non-urgent push alerts during your sleeping or deep focus time.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="toggle-quiet-hours" checked>
+                <span class="slider-round"></span>
+              </label>
+            </div>
+            <div class="settings-card-body" id="quiet-hours-controls">
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="quiet-start-time">Mute Notifications From</label>
+                  <input type="time" id="quiet-start-time" class="form-input" value="22:00">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="quiet-end-time">Resume Notifications At</label>
+                  <input type="time" id="quiet-end-time" class="form-input" value="08:00">
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 5: AI MODELS & PROMPTS
+             =================================================================== -->
+        <section id="tab-ai" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">AI Models & Preferences</h2>
+            <p class="pane-description">Configure the default inference foundation model, sampling temperature, and system prompt instructions.</p>
+          </div>
+
+          <!-- AI Model Selection -->
+          <div id="ai-model-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Default Foundation Model</h3>
+                <p>Select the default reasoning engine used across your workspace.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="ai-model-grid">
+                <div class="ai-model-card active" data-model-id="claude-3-5-sonnet">
+                  <div class="ai-model-top">
+                    <span class="ai-model-name">Claude 3.5 Sonnet</span>
+                    <span class="badge badge-success">Recommended</span>
+                  </div>
+                  <p style="font-size: var(--font-xs);">Industry-leading coding reasoning, high velocity, and nuanced instruction following.</p>
+                  <div class="ai-model-metrics">
+                    <span class="metric-pill"><i data-lucide="zap" style="width:12px;height:12px;"></i> Speed: 5/5</span>
+                    <span class="metric-pill"><i data-lucide="brain" style="width:12px;height:12px;"></i> Reasoning: 5/5</span>
+                  </div>
+                </div>
+
+                <div class="ai-model-card" data-model-id="gpt-4o">
+                  <div class="ai-model-top">
+                    <span class="ai-model-name">GPT-4o</span>
+                    <span class="badge badge-info">Multimodal</span>
+                  </div>
+                  <p style="font-size: var(--font-xs);">Flagship omni-model with comprehensive text, audio, and vision capabilities.</p>
+                  <div class="ai-model-metrics">
+                    <span class="metric-pill"><i data-lucide="zap" style="width:12px;height:12px;"></i> Speed: 5/5</span>
+                    <span class="metric-pill"><i data-lucide="brain" style="width:12px;height:12px;"></i> Reasoning: 4.8/5</span>
+                  </div>
+                </div>
+
+                <div class="ai-model-card" data-model-id="gemini-1-5-pro">
+                  <div class="ai-model-top">
+                    <span class="ai-model-name">Gemini 1.5 Pro</span>
+                    <span class="badge badge-warning">2M Context</span>
+                  </div>
+                  <p style="font-size: var(--font-xs);">Massive context window for processing large codebases, video, and audio archives.</p>
+                  <div class="ai-model-metrics">
+                    <span class="metric-pill"><i data-lucide="zap" style="width:12px;height:12px;"></i> Speed: 4/5</span>
+                    <span class="metric-pill"><i data-lucide="brain" style="width:12px;height:12px;"></i> Reasoning: 4.9/5</span>
+                  </div>
+                </div>
+
+                <div class="ai-model-card" data-model-id="llama-3-70b">
+                  <div class="ai-model-top">
+                    <span class="ai-model-name">Llama 3 70B</span>
+                    <span class="badge badge-neutral">Open Weights</span>
+                  </div>
+                  <p style="font-size: var(--font-xs);">High-performance open-source model optimized for low-latency specialized tasks.</p>
+                  <div class="ai-model-metrics">
+                    <span class="metric-pill"><i data-lucide="zap" style="width:12px;height:12px;"></i> Speed: 4.5/5</span>
+                    <span class="metric-pill"><i data-lucide="brain" style="width:12px;height:12px;"></i> Reasoning: 4.5/5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inference Parameters -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Inference Parameters</h3>
+                <p>Fine-tune model sampling behavior and output limits.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <!-- Temperature -->
+              <div id="ai-temp-section" class="slider-group">
+                <div class="slider-header">
+                  <div>
+                    <label class="form-label" for="ai-temp-slider">Temperature (Creativity vs Determinism)</label>
+                    <span id="ai-temp-desc" class="temp-gauge-desc">Balanced & Conversational</span>
+                  </div>
+                  <span id="ai-temp-val" class="slider-value-badge">0.70</span>
+                </div>
+                <div class="range-slider-wrapper">
+                  <input type="range" id="ai-temp-slider" class="custom-range" min="0.0" max="1.0" step="0.05" value="0.70">
+                </div>
+                <div class="slider-ticks">
+                  <span>0.0 (Precise)</span>
+                  <span>0.5 (Balanced)</span>
+                  <span>1.0 (Creative)</span>
+                </div>
+              </div>
+
+              <!-- Max Tokens -->
+              <div id="ai-tokens-section" class="slider-group" style="margin-top: var(--space-4);">
+                <div class="slider-header">
+                  <label class="form-label" for="ai-tokens-slider">Maximum Output Tokens</label>
+                  <span id="ai-tokens-val" class="slider-value-badge">4,096 tokens</span>
+                </div>
+                <div class="range-slider-wrapper">
+                  <input type="range" id="ai-tokens-slider" class="custom-range" min="512" max="8192" step="256" value="4096">
+                </div>
+                <div class="slider-ticks">
+                  <span>512</span>
+                  <span>2,048</span>
+                  <span>4,096</span>
+                  <span>8,192</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Instructions / System Prompt -->
+          <div id="ai-prompt-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>System Prompt & Custom Instructions</h3>
+                <p>Provide guiding rules, coding standards, and persona instructions for AI generations.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-2);">
+                <button type="button" class="btn btn-outline btn-sm" data-prompt-preset="developer">
+                  <i data-lucide="code" style="width:12px;height:12px;"></i>
+                  Senior Developer
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" data-prompt-preset="debugger">
+                  <i data-lucide="bug" style="width:12px;height:12px;"></i>
+                  Diagnostic Specialist
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" data-prompt-preset="creative">
+                  <i data-lucide="palette" style="width:12px;height:12px;"></i>
+                  UI Architect
+                </button>
+              </div>
+              <textarea id="ai-system-prompt" class="form-textarea" style="min-height: 120px;" placeholder="Enter custom system instructions..."></textarea>
+              <div id="prompt-char-count" class="char-counter">0 characters</div>
+            </div>
+          </div>
+
+          <!-- Capabilities -->
+          <div id="ai-features-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Autonomous Agent Capabilities</h3>
+                <p>Enable auxiliary grounding tools and code execution capabilities.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">Real-Time Web Grounding</span>
+                  <span class="toggle-desc">Allow models to browse live documentation and web search.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-web-grounding" checked>
+                  <span class="slider-round"></span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">Sandboxed Code Execution</span>
+                  <span class="toggle-desc">Execute Python and JavaScript calculations in a secure container.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-code-interpreter" checked>
+                  <span class="slider-round"></span>
+                </label>
+              </div>
+
+              <div class="toggle-row">
+                <div class="toggle-info">
+                  <span class="toggle-title">Stream Token Responses</span>
+                  <span class="toggle-desc">Render partial tokens instantaneously as they are generated.</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="toggle-streaming" checked>
+                  <span class="slider-round"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 6: API KEYS & WEBHOOKS
+             =================================================================== -->
+        <section id="tab-apiKeys" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">API Keys & Webhooks</h2>
+            <p class="pane-description">Generate secret authorization tokens for programmatic API access and configure webhook listeners.</p>
+          </div>
+
+          <!-- API Keys Card -->
+          <div id="api-keys-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Secret API Keys</h3>
+                <p>Do not share secret keys in public git repositories or client-side code.</p>
+              </div>
+              <button type="button" id="open-create-key-modal" class="btn btn-primary btn-sm">
+                <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                Generate New Key
+              </button>
+            </div>
+            <div class="settings-card-body">
+              <div id="api-keys-list-container" class="api-key-list"></div>
+            </div>
+          </div>
+
+          <!-- Webhooks Card -->
+          <div id="webhooks-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Webhook Subscriptions</h3>
+                <p>Receive real-time HTTP POST notifications when system events occur.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="form-group">
+                <label class="form-label" for="webhook-url-input">Endpoint URL</label>
+                <div class="input-wrapper has-icon-left">
+                  <i data-lucide="link-2" class="input-icon-left"></i>
+                  <input type="url" id="webhook-url-input" class="form-input" placeholder="https://api.yourdomain.com/webhooks">
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top: var(--space-2);">
+                <label class="form-label">Subscribed Events</label>
+                <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-top: var(--space-1);">
+                  <label style="display:flex; align-items:center; gap:6px; font-size:var(--font-sm); cursor:pointer;">
+                    <input type="checkbox" checked> <code>model.completed</code>
+                  </label>
+                  <label style="display:flex; align-items:center; gap:6px; font-size:var(--font-sm); cursor:pointer;">
+                    <input type="checkbox" checked> <code>billing.invoice_created</code>
+                  </label>
+                  <label style="display:flex; align-items:center; gap:6px; font-size:var(--font-sm); cursor:pointer;">
+                    <input type="checkbox"> <code>user.created</code>
+                  </label>
+                </div>
+              </div>
+
+              <div style="margin-top: var(--space-4);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2);">
+                  <span class="form-label">Webhook Delivery Simulator</span>
+                  <button type="button" id="test-webhook-btn" class="btn btn-outline btn-sm">
+                    <i data-lucide="zap" style="width:14px;height:14px;"></i>
+                    Send Test Event
+                  </button>
+                </div>
+                <div id="webhook-log-output" class="webhook-log-terminal">Ready for test event. Click "Send Test Event" to verify delivery...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 7: BILLING & PLANS
+             =================================================================== -->
+        <section id="tab-billing" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">Billing & Usage</h2>
+            <p class="pane-description">Manage your subscription tier, track API token quotas, and download billing invoices.</p>
+          </div>
+
+          <!-- Subscription Plans Grid -->
+          <div id="billing-plan-section" class="plan-tier-grid" style="margin-bottom: var(--density-gap);">
+            <div class="plan-card" data-plan-tier="starter">
+              <div>
+                <span class="badge badge-neutral" style="margin-bottom: var(--space-2);">Hobby</span>
+                <h3>Starter</h3>
+                <div class="plan-price">$0 <span>/ month</span></div>
+                <ul class="plan-features-list" style="margin-top: var(--space-4);">
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> 50,000 monthly tokens</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> 1 Workspace seat</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Community support</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm plan-action-btn">Switch Plan</button>
+            </div>
+
+            <div class="plan-card current-plan" data-plan-tier="pro">
+              <div>
+                <span class="badge badge-success" style="margin-bottom: var(--space-2);">Current Plan</span>
+                <h3>Pro Plan</h3>
+                <div class="plan-price">$29 <span>/ month</span></div>
+                <ul class="plan-features-list" style="margin-top: var(--space-4);">
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> 2,000,000 monthly tokens</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> 5 Team seats</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Claude 3.5 & GPT-4o Access</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Priority 24/7 SLA</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm plan-action-btn" disabled>Current Plan</button>
+            </div>
+
+            <div class="plan-card" data-plan-tier="enterprise">
+              <div>
+                <span class="badge badge-info" style="margin-bottom: var(--space-2);">Scale</span>
+                <h3>Enterprise</h3>
+                <div class="plan-price">$149 <span>/ month</span></div>
+                <ul class="plan-features-list" style="margin-top: var(--space-4);">
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Unlimited tokens</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Unlimited seats</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Dedicated fine-tuning VPC</li>
+                  <li><i data-lucide="check" class="check-icon" style="width:14px;height:14px;"></i> Custom SLA & SOC2 Compliance</li>
+                </ul>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm plan-action-btn">Upgrade</button>
+            </div>
+          </div>
+
+          <!-- Usage Metrics -->
+          <div id="billing-usage-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Monthly Usage & Quotas</h3>
+                <p>Usage cycle resets on the 1st of next month.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:var(--font-xs); font-weight:700; margin-bottom: 4px;">
+                    <span>API Token Consumption</span>
+                    <span>1,280,000 / 2,000,000 (64%)</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width: 64%;"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:var(--font-xs); font-weight:700; margin-bottom: 4px;">
+                    <span>Cloud Vector Storage</span>
+                    <span>3.8 GB / 10.0 GB (38%)</span>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-fill" style="width: 38%; background: linear-gradient(90deg, #3b82f6, #06b6d4);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method & Invoices -->
+          <div id="billing-payment-section" class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Payment Method</h3>
+                <p>Your primary card will be charged automatically on each billing cycle.</p>
+              </div>
+              <button type="button" id="open-update-card-modal" class="btn btn-outline btn-sm">
+                <i data-lucide="edit-3" style="width:14px;height:14px;"></i>
+                Update Card
+              </button>
+            </div>
+            <div class="settings-card-body">
+              <div class="credit-card-preview">
+                <div>
+                  <div class="card-chip"></div>
+                  <div id="card-last4-display" style="font-family: var(--font-family-mono); font-size: var(--font-lg); letter-spacing: 2px;">•••• 4242</div>
+                  <div style="display: flex; gap: var(--space-4); margin-top: var(--space-2); font-size: var(--font-xs); color: #94a3b8;">
+                    <span>Cardholder: <strong>Alex Sterling</strong></span>
+                    <span>Expires: <strong id="card-expiry-display">09/28</strong></span>
+                  </div>
+                </div>
+                <i data-lucide="credit-card" style="width: 38px; height: 38px; color: #94a3b8;"></i>
+              </div>
+            </div>
+
+            <div style="margin-top: var(--space-6);">
+              <h4 style="font-size: var(--font-sm); margin-bottom: var(--space-3);">Recent Invoices</h4>
+              <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+                <div class="session-card">
+                  <div style="display: flex; align-items: center; gap: var(--space-3);">
+                    <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-muted);"></i>
+                    <div>
+                      <div style="font-weight: 700; font-size: var(--font-sm);">INV-2026-008 ($29.00)</div>
+                      <div style="font-size: var(--font-xs); color: var(--text-muted);">August 1, 2026 • Paid</div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-sm download-invoice-btn" data-inv-id="INV-2026-008">
+                    <i data-lucide="download" style="width: 12px; height: 12px;"></i>
+                    PDF
+                  </button>
+                </div>
+                <div class="session-card">
+                  <div style="display: flex; align-items: center; gap: var(--space-3);">
+                    <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-muted);"></i>
+                    <div>
+                      <div style="font-weight: 700; font-size: var(--font-sm);">INV-2026-007 ($29.00)</div>
+                      <div style="font-size: var(--font-xs); color: var(--text-muted);">July 1, 2026 • Paid</div>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-outline btn-sm download-invoice-btn" data-inv-id="INV-2026-007">
+                    <i data-lucide="download" style="width: 12px; height: 12px;"></i>
+                    PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================================
+             TAB 8: DATA & DANGER ZONE
+             =================================================================== -->
+        <section id="tab-danger" class="tab-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">Data Management & Danger Zone</h2>
+            <p class="pane-description">Export backups, import settings, or execute irreversible account resets.</p>
+          </div>
+
+          <!-- Backup & Restore -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Data Export & Migration</h3>
+                <p>Transfer your settings to another device or create an offline backup.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="form-grid-2">
+                <div id="data-export-section" style="padding: var(--space-4); background: var(--bg-surface-subtle); border-radius: var(--radius-lg);">
+                  <h4 style="font-size: var(--font-sm); margin-bottom: 4px;">Export Settings</h4>
+                  <p style="font-size: var(--font-xs); margin-bottom: var(--space-3);">Save all profile, AI preferences, and themes as a JSON document.</p>
+                  <button type="button" id="export-settings-btn-2" onclick="document.getElementById('export-settings-btn').click()" class="btn btn-outline btn-sm">
+                    <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                    Download JSON Backup
+                  </button>
+                </div>
+
+                <div id="data-import-section" style="padding: var(--space-4); background: var(--bg-surface-subtle); border-radius: var(--radius-lg);">
+                  <h4 style="font-size: var(--font-sm); margin-bottom: 4px;">Import Settings</h4>
+                  <p style="font-size: var(--font-xs); margin-bottom: var(--space-3);">Restore your dashboard configuration from a backup file.</p>
+                  <input type="file" id="import-settings-file" accept=".json" style="display: none;">
+                  <label for="import-settings-file" class="btn btn-outline btn-sm" style="cursor: pointer;">
+                    <i data-lucide="upload" style="width: 14px; height: 14px;"></i>
+                    Upload Backup JSON
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger Zone Card -->
+          <div class="settings-card danger-card">
+            <div class="settings-card-header">
+              <div class="card-header-text">
+                <h3>Danger Zone</h3>
+                <p>These actions are destructive and cannot be undone. Please proceed with caution.</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div id="danger-reset-section" class="danger-action-row">
+                <div>
+                  <div style="font-weight: 700; font-size: var(--font-sm); color: var(--text-primary);">Reset All Settings to Factory Defaults</div>
+                  <div style="font-size: var(--font-xs); color: var(--text-secondary);">Reverts all customization, AI models, and preferences to initial settings.</div>
+                </div>
+                <button type="button" id="open-factory-reset-modal" class="btn btn-danger-outline btn-sm">
+                  Reset Defaults
+                </button>
+              </div>
+
+              <div id="danger-delete-section" class="danger-action-row">
+                <div>
+                  <div style="font-weight: 700; font-size: var(--font-sm); color: var(--color-danger);">Permanently Delete Account</div>
+                  <div style="font-size: var(--font-xs); color: var(--text-secondary);">Permanently purges all workspace data, API keys, and subscription records.</div>
+                </div>
+                <button type="button" id="open-delete-account-modal" class="btn btn-danger btn-sm">
+                  Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Floating Sticky "Unsaved Changes" Action Bar -->
+    <div id="unsaved-changes-bar" class="unsaved-bar">
+      <div class="unsaved-bar-content">
+        <div class="unsaved-indicator"></div>
+        <span class="unsaved-text">You have unsaved changes</span>
+      </div>
+      <div class="unsaved-bar-actions">
+        <button type="button" id="discard-changes-btn" class="btn btn-outline btn-sm">Discard</button>
+        <button type="button" id="save-changes-btn" class="btn btn-primary btn-sm">
+          <i data-lucide="save" style="width: 14px; height: 14px;"></i>
+          Save Changes
+        </button>
+      </div>
+    </div>
+
+    <!-- ===================================================================
+         MODALS
+         =================================================================== -->
+    <!-- 1. Two-Factor Authentication Setup Modal -->
+    <div id="modal-2fa-setup" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title">Enable Two-Factor Authentication</h3>
+          <button class="btn btn-icon btn-sm" data-close-modal="modal-2fa-setup" aria-label="Close">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: var(--space-4);">Scan the QR code below using your authenticator app (Google Authenticator, Authy, 1Password):</p>
+          <div style="display: flex; justify-content: center; margin-bottom: var(--space-4);">
+            <!-- Simulated QR Code SVG Graphic -->
+            <div style="background: #ffffff; padding: 12px; border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
+              <svg width="150" height="150" viewBox="0 0 100 100" fill="#0f172a">
+                <rect x="10" y="10" width="25" height="25" fill="#0f172a" />
+                <rect x="15" y="15" width="15" height="15" fill="#ffffff" />
+                <rect x="18" y="18" width="9" height="9" fill="#0f172a" />
+                <rect x="65" y="10" width="25" height="25" fill="#0f172a" />
+                <rect x="70" y="15" width="15" height="15" fill="#ffffff" />
+                <rect x="73" y="18" width="9" height="9" fill="#0f172a" />
+                <rect x="10" y="65" width="25" height="25" fill="#0f172a" />
+                <rect x="15" y="70" width="15" height="15" fill="#ffffff" />
+                <rect x="18" y="73" width="9" height="9" fill="#0f172a" />
+                <!-- Data blocks -->
+                <rect x="42" y="10" width="10" height="10" />
+                <rect x="50" y="25" width="8" height="8" />
+                <rect x="40" y="40" width="20" height="20" />
+                <rect x="65" y="45" width="10" height="10" />
+                <rect x="10" y="45" width="12" height="12" />
+                <rect x="45" y="70" width="15" height="15" />
+                <rect x="70" y="70" width="20" height="20" />
+              </svg>
+            </div>
+          </div>
+          <div style="text-align: center; margin-bottom: var(--space-4);">
+            <span class="form-hint">Secret Setup Key:</span>
+            <code style="display:block; font-size: var(--font-xs); font-weight:700; color: var(--accent-primary); margin-top:2px;">JBSWY3DPEHPK3PXP</code>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="totp-input">Enter 6-Digit Authenticator Code</label>
+            <input type="text" id="totp-input" class="form-input" placeholder="e.g. 849201" maxlength="6" style="text-align:center; font-family:var(--font-family-mono); font-size:var(--font-lg); letter-spacing:4px;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-sm" data-close-modal="modal-2fa-setup">Cancel</button>
+          <button type="button" id="verify-2fa-btn" class="btn btn-primary btn-sm">Verify & Activate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Create API Key Modal -->
+    <div id="modal-create-key" class="modal-backdrop">
+      <div class="modal-dialog">
+        <form id="create-key-form">
+          <div class="modal-header">
+            <h3 class="modal-title">Generate API Key</h3>
+            <button type="button" class="btn btn-icon btn-sm" data-close-modal="modal-create-key" aria-label="Close">
+              <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" style="margin-bottom: var(--space-4);">
+              <label class="form-label" for="new-key-name">Key Label / Description</label>
+              <input type="text" id="new-key-name" class="form-input" placeholder="e.g. Production Next.js App" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expiration Period</label>
+              <select class="form-select">
+                <option value="never">Never expires</option>
+                <option value="90">90 days</option>
+                <option value="30">30 days</option>
+                <option value="7">7 days</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline btn-sm" data-close-modal="modal-create-key">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Create Secret Key</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 3. Update Payment Card Modal -->
+    <div id="modal-update-card" class="modal-backdrop">
+      <div class="modal-dialog">
+        <form id="update-card-form">
+          <div class="modal-header">
+            <h3 class="modal-title">Update Payment Method</h3>
+            <button type="button" class="btn btn-icon btn-sm" data-close-modal="modal-update-card" aria-label="Close">
+              <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group" style="margin-bottom: var(--space-4);">
+              <label class="form-label" for="input-card-number">Card Number</label>
+              <div class="input-wrapper has-icon-left">
+                <i data-lucide="credit-card" class="input-icon-left"></i>
+                <input type="text" id="input-card-number" class="form-input" placeholder="4242 •••• •••• 4242" maxlength="19" required>
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="input-card-expiry">Expiry Date</label>
+                <input type="text" id="input-card-expiry" class="form-input" placeholder="MM/YY" maxlength="5" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="input-card-cvc">CVC / Security Code</label>
+                <input type="password" id="input-card-cvc" class="form-input" placeholder="•••" maxlength="4" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline btn-sm" data-close-modal="modal-update-card">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save Card</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 4. Factory Reset Modal -->
+    <div id="modal-factory-reset" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title" style="color: var(--color-warning);">Reset to Factory Defaults?</h3>
+          <button class="btn btn-icon btn-sm" data-close-modal="modal-factory-reset" aria-label="Close">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>This action will reset your interface theme, AI configurations, notification preferences, and personal details back to original defaults.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-sm" data-close-modal="modal-factory-reset">Cancel</button>
+          <button type="button" id="confirm-factory-reset-btn" class="btn btn-danger btn-sm">Yes, Reset Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Delete Account Modal -->
+    <div id="modal-delete-account" class="modal-backdrop">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title" style="color: var(--color-danger);">Delete Account Permanently</h3>
+          <button class="btn btn-icon btn-sm" data-close-modal="modal-delete-account" aria-label="Close">
+            <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: var(--space-3);">This will immediately close your workspace, revoke all API keys, and permanently delete all stored data. This action is <strong>irreversible</strong>.</p>
+          <div class="form-group">
+            <label class="form-label" for="delete-confirm-input">Type <code style="color:var(--color-danger);">alexsterling</code> or <code style="color:var(--color-danger);">DELETE</code> to confirm:</label>
+            <input type="text" id="delete-confirm-input" class="form-input" placeholder="Type confirmation here...">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline btn-sm" data-close-modal="modal-delete-account">Cancel</button>
+          <button type="button" id="confirm-delete-account-btn" class="btn btn-danger btn-sm" disabled>Permanently Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Bootstrap Entry -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
