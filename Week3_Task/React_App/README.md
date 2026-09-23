@@ -2,7 +2,6 @@
 
 A book tracker web app built with **React, TypeScript, and the MVVM architecture**. Search books from Open Library, view their details, and keep a personal bookshelf with your reading status.
 
-**Live demo:** _Add Vercel link here_
 **Author:** Aqsa Saqib ([@AqsaSaqib](https://github.com/AqsaSaqib))
 
 > Built for an internship assignment: *Build a React application independently using AI as a development assistant.*
