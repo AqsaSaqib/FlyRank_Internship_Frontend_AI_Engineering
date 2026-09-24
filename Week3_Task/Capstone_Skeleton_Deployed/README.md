@@ -4,7 +4,7 @@ A developer progress journal. Connect your GitHub username, see your recent comm
 
 > **Status:** Phase 1 — Foundations. Every screen is a routed placeholder with sample data. The `/health` page fetches live data from the GitHub API.
 
-**Live preview:** https://your-devlog-app.vercel.app _(replace after deploying)_
+**Live preview:** https://devlog-drab.vercel.app
 
 ## Features
 
@@ -117,7 +117,7 @@ No API keys or secrets are needed in Phase 1. The GitHub API is called without a
 3. Set **Root Directory** to `Week3_Task/Capstone_Skeleton_Deployed`, because the app lives in a subfolder of the repository. The framework preset (**Next.js**) is detected automatically.
 4. Under **Environment Variables**, add `GITHUB_API_URL` and `NEXT_PUBLIC_DEFAULT_GITHUB_USER` for Production, Preview, and Development.
 5. Click **Deploy**.
-6. Open the deployment, check that `/health` shows **OK**, and paste the URL into the **Live preview** line above.
+6. Open the deployment and check that `/health` shows **OK**.
 
 Every push to `main` triggers a new production deployment, and every pull request gets a preview deployment. After changing a `NEXT_PUBLIC_` variable, redeploy, because its value is inlined at build time.
 
