@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Hide the Next.js dev tools button (bottom-left) during development.
+  devIndicators: false,
 };
 
 export default nextConfig;

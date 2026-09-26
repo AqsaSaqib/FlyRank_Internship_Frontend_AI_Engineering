@@ -4,6 +4,18 @@ import { useState, type ReactNode } from "react";
 import Disclosure from "@/playground/Disclosure";
 import Tabs, { type Tab } from "@/playground/Tabs";
 import Modal from "@/playground/Modal";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Tabs as ShadcnTabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const tabs: Tab[] = [
   { label: "HTML", content: <p>HTML gives the page its structure.</p> },
@@ -82,6 +94,60 @@ export default function PlaygroundPage() {
               </div>
             </form>
           </Modal>
+        </Card>
+
+        <div className="pt-10 pb-2 text-center">
+          <h2 className="text-2xl font-bold tracking-tight">shadcn/ui version</h2>
+          <p className="mt-2 text-slate-500">
+            The same Tabs and Modal using shadcn (built on Radix), for comparison. See NOTES.md.
+          </p>
+        </div>
+
+        <Card title="Tabs (shadcn)" keys="same keys as above">
+          <ShadcnTabs defaultValue={tabs[0].label}>
+            <TabsList aria-label="Web technologies (shadcn)">
+              {tabs.map((tab) => (
+                <TabsTrigger key={tab.label} value={tab.label}>
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            {tabs.map((tab) => (
+              <TabsContent key={tab.label} value={tab.label} className="p-4 text-slate-600">
+                {tab.content}
+              </TabsContent>
+            ))}
+          </ShadcnTabs>
+        </Card>
+
+        <Card title="Dialog (shadcn)" keys="same keys as above">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Open shadcn dialog</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <form className="grid gap-4" onSubmit={(event) => event.preventDefault()}>
+                <DialogHeader>
+                  <DialogTitle>Subscribe</DialogTitle>
+                  <DialogDescription>Enter your name and email to subscribe.</DialogDescription>
+                </DialogHeader>
+                <label className="block text-sm font-medium text-slate-700">
+                  Name
+                  <input type="text" className={input} />
+                </label>
+                <label className="block text-sm font-medium text-slate-700">
+                  Email
+                  <input type="email" className={input} />
+                </label>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <Button type="submit">Subscribe</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </Card>
       </div>
     </main>
