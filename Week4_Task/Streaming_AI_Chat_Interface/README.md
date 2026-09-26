@@ -4,7 +4,7 @@ An AI chat for my capstone project **DevLog** (a journal where developers log th
 
 You write rough notes about your day, and the assistant turns them into a clean log entry. It can also write a weekly report or help you explain a blocker in stand-up. The answer appears **word by word while the AI is writing it** (streaming), like ChatGPT.
 
-**Live preview:** https://devlog-streaming-chat.vercel.app/
+**Live preview:** https://devlog-chat-streaming.vercel.app/
 
 ---
 
