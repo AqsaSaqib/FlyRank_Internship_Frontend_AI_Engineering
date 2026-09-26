@@ -4,7 +4,7 @@ An AI chat for my capstone project **DevLog** (a journal where developers log th
 
 You write rough notes about your day, and the assistant turns them into a clean log entry. It can also write a weekly report or help you explain a blocker in stand-up. The answer appears **word by word while the AI is writing it** (streaming), like ChatGPT.
 
-**Live preview:** _add your Vercel URL here_
+**Live preview:** https://devlog-streaming-chat.vercel.app/
 
 ---
 
@@ -171,7 +171,7 @@ The app works with **two AI providers**. It picks one based on which key you giv
 2. On [vercel.com](https://vercel.com), click **Add New → Project** and import the repo.
 3. Set **Root Directory** to `Week4_Task/Assignment_2`.
 4. Under **Environment Variables**, add `GEMINI_API_KEY` with your key.
-5. Click **Deploy**, then paste the link at the top of this README.
+5. Click **Deploy**. This project is live at https://devlog-streaming-chat.vercel.app/
 
 ---
 
