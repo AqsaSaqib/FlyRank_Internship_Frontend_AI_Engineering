@@ -87,6 +87,14 @@ function script(prompt: LanguageModelV4Prompt): Step {
     };
   }
 
+  // The welcome screen's "write" and "plan" prompts get a written answer, not a search.
+  if (/\b(write|draft)\b/.test(lc) && /\b(entry|log)\b/.test(lc)) {
+    return { kind: "text", reasoning: CANNED_REASONING, text: CANNED_REPLY };
+  }
+  if (/\b(focus|tomorrow|next up|prioriti[sz]e)\b/.test(lc)) {
+    return { kind: "text", reasoning: FOCUS_REASONING, text: FOCUS_REPLY };
+  }
+
   if (/\b(stats|chart|graph|trend|how many|hours|breakdown|time spent)\b/.test(lc)) {
     return {
       kind: "tool",
@@ -226,6 +234,17 @@ function toStream(step: Step, options: LanguageModelV4CallOptions): ReadableStre
     },
   });
 }
+
+const FOCUS_REASONING =
+  "The flaky CI test is still open from earlier this week, and the OAuth work is nearly done, so those come first.";
+
+const FOCUS_REPLY = `Based on your recent entries, here's what I'd put first tomorrow:
+
+1. **Close out the flaky contribution graph test.** You found the timezone cause; confirm CI is green for a few runs and remove any retries you added.
+2. **Wrap up the GitHub OAuth callback.** Add a test for the expired-session path so the logout-on-refresh bug can't come back.
+3. **Review time.** Leave an hour for Sam's caching PR follow-ups.
+
+Want me to save this as a plan in today's entry? *(Mock reply: add an API key to \`.env.local\` for real answers.)*`;
 
 const CANNED_REASONING =
   "The notes mention a bug fix, pairing on caching and a flaky test, so I'll group them into done, learned and blocked.";

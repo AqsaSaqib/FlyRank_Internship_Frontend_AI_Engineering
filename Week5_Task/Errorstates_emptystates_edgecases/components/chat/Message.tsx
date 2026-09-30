@@ -5,7 +5,11 @@ import { Streamdown } from "streamdown";
 
 import { messageText, type DevLogPart, type DevLogUIMessage } from "@/lib/chat/types";
 import { ToolPart, isDevLogToolPart, type DevLogToolPart } from "@/components/tools/ToolPart";
+import { Avatar } from "./Avatar";
+import { ChatError } from "./ChatError";
+import { EmptyReply } from "./EmptyReply";
 import { Icon } from "./icons";
+import { ThinkingSkeleton } from "./MessageSkeleton";
 
 type Props = {
   message: DevLogUIMessage;
@@ -14,9 +18,13 @@ type Props = {
   live: boolean;
   stopped: boolean;
   /** The request for this turn failed (only ever set on the last message). */
-  error?: string;
-  canRegenerate: boolean;
-  onRegenerate: () => void;
+  error?: Error;
+  /** A request is in flight anywhere in the chat. */
+  busy: boolean;
+  online: boolean;
+  onStop: () => void;
+  /** Re-run only this (the last) assistant response. Resolves when the request settles. */
+  onRetry: () => Promise<void>;
 };
 
 export const Message = memo(function Message(props: Props) {
@@ -59,7 +67,7 @@ function toBlocks(parts: DevLogPart[]): Block[] {
   return blocks;
 }
 
-function AssistantMessage({ message, isLast, live, stopped, error, canRegenerate, onRegenerate }: Props) {
+function AssistantMessage({ message, isLast, live, stopped, error, busy, online, onStop, onRetry }: Props) {
   const text = messageText(message);
   const reasoning = message.parts
     .filter((p) => p.type === "reasoning")
@@ -71,8 +79,12 @@ function AssistantMessage({ message, isLast, live, stopped, error, canRegenerate
   const hasContent = blocks.length > 0;
   // The turn is paused on the user's Save / Cancel; actions would be premature.
   const awaitingApproval = blocks.some((b) => b.kind === "tool" && b.part.state === "approval-requested");
+  // Waiting for the first token: the skeleton holds the reply's place.
   const thinking = live && !hasContent;
-  const showThinkingRow = thinking || reasoning.length > 0;
+  // The stream failed after some content arrived: keep it, marked as incomplete.
+  const incomplete = !!error && hasContent;
+  // Finished cleanly but said nothing (no text, no tool call).
+  const emptyReply = isLast && !live && !error && !hasContent && !stopped;
 
   return (
     <li className="flex animate-message-in gap-3">
@@ -80,119 +92,55 @@ function AssistantMessage({ message, isLast, live, stopped, error, canRegenerate
       <div className="min-w-0 flex-1 pt-1">
         <span className="sr-only">Assistant said: </span>
 
-        {/*
-         * Thinking → content handoff. The indicator row doesn't pop out of
-         * existence when the first token (or tool card) lands: it collapses
-         * (grid rows 1fr → 0fr) while the content fades in, so the bubble
-         * never flickers or jumps. When there is reasoning, the same row
-         * stays and turns into the "Thought process" disclosure.
-         */}
-        <div
-          className={`grid transition-[grid-template-rows,opacity] duration-200 ease-out ${
-            showThinkingRow ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-          }`}
-          // Collapsed rows stay mounted for the transition; hide them from screen readers.
-          aria-hidden={!showThinkingRow}
-          inert={!showThinkingRow}
-        >
-          <div className="min-h-0 overflow-hidden">
-            {reasoning ? (
-              <Reasoning text={reasoning} active={thinking} />
+        {reasoning && <Reasoning text={reasoning} active={thinking} />}
+
+        {/* Laid out like the reply it becomes, so the first tokens replace it in place. */}
+        {thinking && <ThinkingSkeleton onStop={onStop} hasReasoning={!!reasoning} />}
+
+        <div className={incomplete ? "opacity-70 transition-opacity duration-200" : undefined}>
+          {blocks.map((block) =>
+            block.kind === "tool" ? (
+              <ToolPart key={block.key} part={block.part} />
             ) : (
-              <ThinkingIndicator />
-            )}
-          </div>
+              <div key={block.key} className="animate-text-in">
+                <Streamdown
+                  className="chat-markdown text-[15px] leading-relaxed"
+                  isAnimating={live && block === lastBlock}
+                  caret={live && block === lastBlock ? "circle" : undefined}
+                  // Links open in a new tab without the confirmation modal.
+                  linkSafety={{ enabled: false }}
+                >
+                  {block.text}
+                </Streamdown>
+              </div>
+            ),
+          )}
         </div>
 
-        {blocks.map((block) =>
-          block.kind === "tool" ? (
-            <ToolPart key={block.key} part={block.part} />
-          ) : (
-            <div key={block.key} className="animate-text-in">
-              <Streamdown
-                className="chat-markdown text-[15px] leading-relaxed"
-                isAnimating={live && block === lastBlock}
-                caret={live && block === lastBlock ? "circle" : undefined}
-                // Links open in a new tab without the confirmation modal.
-                linkSafety={{ enabled: false }}
-              >
-                {block.text}
-              </Streamdown>
-            </div>
-          ),
+        {incomplete && (
+          <span className="mt-1 inline-flex animate-notice-in items-center gap-1.5 rounded-full border border-dashed border-border px-2 py-0.5 text-xs text-muted-foreground">
+            <Icon name="alert" className="size-3" />
+            Incomplete response
+          </span>
         )}
 
-        {error && (
-          <div
-            role="alert"
-            className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-danger"
-          >
-            <Icon name="alert" className="size-4 shrink-0" />
-            <span className="flex-1">{readableError(error)}</span>
-            {isLast && canRegenerate && (
-              <button
-                type="button"
-                onClick={onRegenerate}
-                className="rounded-md px-2 py-1 font-medium underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-danger"
-              >
-                Try again
-              </button>
-            )}
-          </div>
+        {error && isLast && (
+          <ChatError error={error} online={online} busy={busy} partial={incomplete} onRetry={onRetry} />
         )}
 
-        {!live && !error && hasContent && !awaitingApproval && (
+        {emptyReply && <EmptyReply busy={busy} online={online} onRetry={onRetry} />}
+
+        {!live && !error && (hasContent || stopped) && !awaitingApproval && (
           <MessageActions
             text={text}
             model={message.metadata?.model}
             stopped={stopped}
-            showRegenerate={isLast && canRegenerate}
-            onRegenerate={onRegenerate}
+            showRegenerate={isLast && !busy}
+            onRegenerate={onRetry}
           />
         )}
       </div>
     </li>
-  );
-}
-
-/** HTTP errors from the route arrive as its JSON body (`{"error": "..."}`); show just the message. */
-function readableError(message: string): string {
-  try {
-    const parsed: unknown = JSON.parse(message);
-    if (parsed && typeof parsed === "object" && "error" in parsed && typeof parsed.error === "string") {
-      return parsed.error;
-    }
-  } catch {
-    // Not JSON: already a readable message from the stream.
-  }
-  return message || "Something went wrong.";
-}
-
-function Avatar() {
-  return (
-    <div
-      aria-hidden="true"
-      className="grid size-8 shrink-0 place-items-center rounded-full border border-border bg-primary-soft text-primary"
-    >
-      <Icon name="sparkle" className="size-4" />
-    </div>
-  );
-}
-
-function ThinkingIndicator() {
-  return (
-    <div role="status" className="flex h-7 items-center gap-2 text-sm">
-      <span className="flex gap-1" aria-hidden="true">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="thinking-dot size-1.5 rounded-full bg-primary"
-            style={{ animationDelay: `${i * 160}ms` }}
-          />
-        ))}
-      </span>
-      <span className="text-shimmer font-medium">Thinking…</span>
-    </div>
   );
 }
 
@@ -231,7 +179,7 @@ function MessageActions({
 }) {
   const [copied, setCopied] = useState(false);
   const button =
-    "inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary";
+    "tap-target inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary";
 
   return (
     <div className="mt-1 flex animate-text-in items-center gap-1">

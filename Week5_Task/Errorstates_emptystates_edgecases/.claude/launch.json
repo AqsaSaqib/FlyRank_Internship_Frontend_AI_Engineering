@@ -2,10 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "devlog-chat",
+      "name": "devlog-errors",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "3006"],
-      "port": 3006
+      "runtimeArgs": ["run", "dev"],
+      "port": 3007,
+      "autoPort": true
     }
   ]
 }

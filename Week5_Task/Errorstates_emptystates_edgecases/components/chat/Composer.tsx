@@ -13,6 +13,8 @@ type Props = {
   status: ChatStatus;
   onSend: (text: string) => boolean;
   onStop: () => void;
+  /** No network: sending is blocked (drafting isn't). */
+  offline?: boolean;
   ref?: Ref<ComposerHandle>;
 };
 
@@ -22,14 +24,15 @@ type Props = {
  * The textarea stays editable while a reply streams, so you can draft the next
  * message; only sending is blocked until the reply finishes or is stopped.
  *
- * Button states: disabled (empty) → ready (send) → submitted (stop + spinner
- * ring, waiting for the first token) → streaming (stop) → back to ready.
+ * Button states: disabled (empty, whitespace-only or offline) → ready (send)
+ * → submitted (stop + spinner ring, waiting for the first token) → streaming
+ * (stop) → back to ready.
  */
-export function Composer({ status, onSend, onStop, ref }: Props) {
+export function Composer({ status, onSend, onStop, offline = false, ref }: Props) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const busy = status === "submitted" || status === "streaming";
-  const canSend = !busy && value.trim().length > 0;
+  const canSend = !busy && !offline && value.trim().length > 0;
 
   useImperativeHandle(ref, () => ({
     focus: () => textareaRef.current?.focus(),
@@ -80,18 +83,24 @@ export function Composer({ status, onSend, onStop, ref }: Props) {
           }
         }}
         rows={1}
-        placeholder={busy ? "Esc to stop · keep typing your next message" : "Paste your notes or ask anything…"}
+        placeholder={
+          busy
+            ? "Esc to stop · keep typing your next message"
+            : offline
+              ? "You're offline · you can keep drafting"
+              : "Paste your notes or ask anything…"
+        }
         enterKeyHint="send"
         autoComplete="off"
-        // 16px text so iOS doesn't zoom the page when the input is focused.
-        className="max-h-[200px] min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-base leading-6 outline-none placeholder:text-muted-foreground sm:text-[15px]"
+        // 16px at every width: iOS Safari (iPhone and iPad) zooms the page when a smaller input is focused.
+        className="max-h-[200px] min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-base leading-6 outline-none placeholder:text-muted-foreground"
       />
       {busy ? (
         <button
           type="submit"
           aria-label="Stop generating"
           title="Stop generating (Esc)"
-          className="relative grid size-10 shrink-0 place-items-center rounded-xl bg-foreground text-background transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="tap-target relative grid size-10 shrink-0 place-items-center rounded-xl bg-foreground text-background transition-transform active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           {status === "submitted" && (
             <span
@@ -105,9 +114,9 @@ export function Composer({ status, onSend, onStop, ref }: Props) {
         <button
           type="submit"
           disabled={!canSend}
-          aria-label="Send message"
-          title="Send (Enter)"
-          className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-[transform,background-color,opacity] hover:bg-primary-hover active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
+          aria-label={offline ? "Send message (unavailable while offline)" : "Send message"}
+          title={offline ? "You're offline" : "Send (Enter)"}
+          className="tap-target grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition-[transform,background-color,opacity] hover:bg-primary-hover active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
         >
           <Icon name="send" className="size-5" />
         </button>

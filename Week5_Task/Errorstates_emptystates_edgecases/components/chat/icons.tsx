@@ -20,6 +20,11 @@ const paths = {
   tag: "M3 12V4h8l10 10-8 8zM7.5 7.5v.01",
   clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2",
   inbox: "M3 13h5l2 3h4l2-3h5M5 5h14l2 8v6H3v-6z",
+  wifiOff:
+    "M2 2l20 20M8.5 16.5a5 5 0 0 1 7 0M5 12.6a10 10 0 0 1 5.2-2.8M19 12.6a10 10 0 0 0-2.3-1.6M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5M12 20h.01",
+  pen: "M4 20h4L20 8l-4-4L4 16zM14 6l4 4",
+  book: "M4 19V5a2 2 0 0 1 2-2h14v14H6a2 2 0 0 0-2 2zm0 0a2 2 0 0 0 2 2h14",
+  home: "M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10",
 } as const;
 
 export type IconName = keyof typeof paths;

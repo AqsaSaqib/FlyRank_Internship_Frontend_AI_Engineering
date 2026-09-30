@@ -178,6 +178,52 @@ body {
   animation: state-in 200ms ease-out both;
 }
 
+/* Errors and notices arrive calmly: a short fade and 4px rise, never a flash. */
+@keyframes notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@utility animate-notice-in {
+  animation: notice-in 200ms ease-out both;
+}
+
+/*
+ * Full-height app shell. 100vh first for browsers without dynamic viewport
+ * units; 100dvh follows the mobile browser chrome. On iOS, where the keyboard
+ * doesn't resize the layout viewport, useVisualViewport() sets --app-height
+ * to the visible height so the composer stays above the keyboard.
+ */
+@utility h-app {
+  height: 100vh;
+  height: 100dvh;
+  height: var(--app-height, 100dvh);
+}
+
+@utility min-h-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/*
+ * 44×44px minimum hit area without changing how a small button looks: an
+ * invisible box centered on the button. Use on controls smaller than 44px.
+ */
+@utility tap-target {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
 /* Loading placeholder bars (tool input still streaming). */
 @utility skeleton {
   background: linear-gradient(90deg, var(--muted) 25%, var(--border) 50%, var(--muted) 75%) 0 0 / 200% 100%;

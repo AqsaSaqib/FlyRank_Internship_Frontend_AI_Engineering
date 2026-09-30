@@ -1,22 +1,33 @@
 import {
-  APICallError,
   convertToModelMessages,
   createUIMessageStreamResponse,
-  InvalidToolInputError,
   isStepCount,
-  NoSuchToolError,
   safeValidateUIMessages,
   streamText,
   toUIMessageStream,
 } from "ai";
+import { z } from "zod";
 
 import { GENERATION, LIMITS, MODEL_IDS, getModel, getProvider, systemPrompt } from "@/lib/ai/config";
-import { TOOL_APPROVAL, TOOL_ERROR_MODES, ToolFailure, createDevLogTools, type ToolErrorMode } from "@/lib/ai/tools";
+import { errorPayload, errorResponse, logServerError, streamErrorText, toPublicError } from "@/lib/ai/errors";
+import { TOOL_APPROVAL, TOOL_ERROR_MODES, createDevLogTools } from "@/lib/ai/tools";
 import { todayIso } from "@/lib/devlog/entries";
-import type { DevLogUIMessage } from "@/lib/chat/types";
+import { messageText, type DevLogUIMessage } from "@/lib/chat/types";
 
-// Long answers (and a tool round-trip) can stream for a while; give Vercel functions room.
+/**
+ * Vercel stops the function after this many seconds. A long answer plus a
+ * tool round-trip fits comfortably; `TIMEOUT_MS` below ends the model call a
+ * little earlier so the user gets a readable error instead of a cut
+ * connection.
+ */
 export const maxDuration = 60;
+const TIMEOUT_MS = (maxDuration - 5) * 1000;
+
+/** `useChat`'s DefaultChatTransport also sends `id`, `trigger` and `messageId`; they're ignored. */
+const RequestBody = z.object({
+  messages: z.array(z.unknown()).min(1),
+  toolErrorMode: z.enum(TOOL_ERROR_MODES).optional(),
+});
 
 /**
  * POST /api/chat
@@ -24,6 +35,10 @@ export const maxDuration = 60;
  * Body: { messages: UIMessage[], toolErrorMode? } from `useChat`.
  * Response: the AI SDK UI message stream (SSE): text, reasoning and typed
  * tool parts, the same whichever provider answers (Claude, Gemini or the mock).
+ *
+ * Errors (see lib/chat/errors.ts for the contract):
+ *   before streaming → HTTP 4xx/5xx with JSON { error, code, retryAfter? }
+ *   while streaming  → the stream's error part, whose text is that same JSON
  *
  * Tools run here on the server. `stopWhen` lets the model take several steps,
  * so after a tool returns it's called again to answer with the result.
@@ -35,38 +50,58 @@ export const maxDuration = 60;
  * cancels the provider's request too, so a stopped reply stops using tokens.
  */
 export async function POST(request: Request) {
-  let body: { messages?: unknown; toolErrorMode?: unknown };
   try {
-    body = await request.json();
+    return await handleChat(request);
+  } catch (error) {
+    // Anything unexpected before the stream started. Never send the error itself.
+    const payload = toPublicError(error);
+    logServerError("route crashed", error, payload.code);
+    return errorResponse(500, payload);
+  }
+}
+
+async function handleChat(request: Request) {
+  let json: unknown;
+  try {
+    json = await request.json();
   } catch {
-    return Response.json({ error: "Invalid JSON body." }, { status: 400 });
+    return errorResponse(400, errorPayload("invalid_request", { error: "The request body isn't valid JSON." }));
+  }
+
+  const body = RequestBody.safeParse(json);
+  if (!body.success) {
+    return errorResponse(400, errorPayload("invalid_request"));
   }
 
   const provider = getProvider();
   if (!provider) {
-    return Response.json(
-      { error: "The server has no AI key. Set GEMINI_API_KEY or ANTHROPIC_API_KEY." },
-      { status: 500 },
-    );
+    console.error("[chat] no provider: set GEMINI_API_KEY or ANTHROPIC_API_KEY");
+    return errorResponse(500, errorPayload("unknown", { error: "The assistant isn't set up on this server yet." }));
   }
 
-  const errorMode: ToolErrorMode = TOOL_ERROR_MODES.find((m) => m === body.toolErrorMode) ?? "keyword";
-  const tools = createDevLogTools({ errorMode });
+  const tools = createDevLogTools({ errorMode: body.data.toolErrorMode ?? "keyword" });
 
   // Untrusted input: check message shapes and every tool part's input/output against the schemas.
   const validated = await safeValidateUIMessages<DevLogUIMessage>({
-    messages: Array.isArray(body.messages) ? body.messages.slice(-LIMITS.maxMessages) : body.messages,
+    messages: body.data.messages.slice(-LIMITS.maxMessages),
     tools,
   });
   if (!validated.success) {
-    return Response.json({ error: "The conversation couldn't be read. Try starting a new chat." }, { status: 400 });
+    return errorResponse(400, errorPayload("invalid_request"));
   }
   const messages = validated.data;
-  const tooLong = messages.some(
-    (m) => m.role === "user" && m.parts.some((p) => p.type === "text" && p.text.length > LIMITS.maxMessageChars),
-  );
+
+  // A new turn must say something. (After an approval the last message is the assistant's.)
+  const last = messages.at(-1);
+  if (last?.role === "user" && !messageText(last).trim()) {
+    return errorResponse(400, errorPayload("empty_input"));
+  }
+  const tooLong = messages.some((m) => m.role === "user" && messageText(m).length > LIMITS.maxMessageChars);
   if (tooLong) {
-    return Response.json({ error: `Messages are limited to ${LIMITS.maxMessageChars} characters.` }, { status: 400 });
+    return errorResponse(
+      400,
+      errorPayload("too_long", { error: `Messages are limited to ${LIMITS.maxMessageChars.toLocaleString("en-US")} characters.` }),
+    );
   }
 
   const result = streamText({
@@ -80,6 +115,9 @@ export async function POST(request: Request) {
     maxOutputTokens: GENERATION.maxOutputTokens,
     reasoning: GENERATION.reasoning,
     abortSignal: request.signal,
+    timeout: { totalMs: TIMEOUT_MS },
+    // Logged (tersely) by `streamErrorText` when it reaches the client; don't log twice.
+    onError: () => {},
   });
 
   return createUIMessageStreamResponse({
@@ -88,29 +126,8 @@ export async function POST(request: Request) {
       // Continuing after an approval appends to the same assistant message.
       originalMessages: messages,
       messageMetadata: ({ part }) => (part.type === "start" ? { model: MODEL_IDS[provider] } : undefined),
-      onError: publicErrorMessage,
+      // Mid-stream errors reach the client as the JSON payload; tool errors as plain text.
+      onError: streamErrorText,
     }),
   });
-}
-
-/**
- * Every error that reaches the browser goes through here: tool failures
- * (shown in the tool's error card as `errorText`) and stream errors (shown
- * under the reply). The SDK masks errors by default; we pass through the
- * messages we wrote for users and replace everything else, so stack traces
- * and provider internals never leak.
- */
-function publicErrorMessage(error: unknown): string {
-  if (error instanceof ToolFailure) return error.message;
-  if (NoSuchToolError.isInstance(error)) return "The assistant tried to use a tool that doesn't exist.";
-  if (InvalidToolInputError.isInstance(error)) return "The assistant sent inputs the tool couldn't accept.";
-  if (APICallError.isInstance(error)) {
-    const status = error.statusCode ?? 0;
-    if (status === 401 || status === 403) return "The server's API key was rejected.";
-    if (status === 429) return "Too many requests right now. Wait a moment and try again.";
-    if (status >= 500) return "The AI provider is temporarily unavailable. Try again in a moment.";
-    return "The AI provider couldn't process this conversation. Try starting a new chat.";
-  }
-  console.error("[chat] unexpected error", error);
-  return "Something went wrong while running this step.";
 }
