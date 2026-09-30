@@ -220,7 +220,7 @@ export function ToolErrorBody({ errorText, attempted }: { errorText: string; att
           <button
             type="button"
             onClick={retry}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-danger px-3 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger dark:text-background"
+            className="tap-target inline-flex h-8 items-center gap-1.5 rounded-lg bg-danger px-3 text-sm font-medium text-white transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger dark:text-background"
           >
             <Icon name="refresh" className="size-3.5" />
             Retry

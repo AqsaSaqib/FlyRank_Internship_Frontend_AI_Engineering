@@ -141,7 +141,7 @@ export function LogStatsCard({ stats }: { stats: Output }) {
                 type="button"
                 aria-pressed={metric === m}
                 onClick={() => setMetric(m)}
-                className="rounded-md px-2 py-0.5 capitalize text-muted-foreground transition-colors aria-pressed:bg-primary-soft aria-pressed:text-primary focus-visible:outline-2 focus-visible:outline-primary"
+                className="tap-target rounded-md px-2 py-0.5 capitalize text-muted-foreground transition-colors aria-pressed:bg-primary-soft aria-pressed:text-primary focus-visible:outline-2 focus-visible:outline-primary"
               >
                 {m}
               </button>
@@ -160,7 +160,7 @@ export function LogStatsCard({ stats }: { stats: Output }) {
       )}
 
       <details className="group text-xs">
-        <summary className="cursor-pointer text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary">
+        <summary className="tap-target cursor-pointer text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary">
           View as table
         </summary>
         <table className="mt-2 w-full text-left tabular-nums">

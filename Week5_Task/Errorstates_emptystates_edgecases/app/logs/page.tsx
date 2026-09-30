@@ -44,7 +44,7 @@ export default async function LogsPage({ searchParams }: PageProps<"/logs">) {
             )}
           </div>
           {entries.length > 0 && (
-            <Link href={WRITE_ENTRY_HREF} className={`${primaryAction} h-10`}>
+            <Link href={WRITE_ENTRY_HREF} className={`${primaryAction} tap-target`}>
               <Icon name="pen" className="size-4" />
               New entry
             </Link>

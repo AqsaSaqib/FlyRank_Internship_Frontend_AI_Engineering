@@ -156,7 +156,7 @@ function AssistantMessage({ message, isLast, live, stopped, error, busy, online,
 function Reasoning({ text, active }: { text: string; active: boolean }) {
   return (
     <details className="group mb-2">
-      <summary className="flex h-7 w-fit cursor-pointer list-none items-center gap-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
+      <summary className="tap-target flex h-7 w-fit cursor-pointer list-none items-center gap-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
         <Icon name="chevron" className="size-3.5 transition-transform group-open:rotate-90" />
         {active ? (
           <span role="status" className="text-shimmer">

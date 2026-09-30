@@ -31,7 +31,7 @@ export function ThemeToggle() {
       }}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
-      className="grid size-9 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
+      className="tap-target grid size-9 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
     >
       {/* Before hydration the theme is unknown, so render an empty box of the same size. */}
       {theme === null ? null : theme === "dark" ? <SunIcon /> : <MoonIcon />}

@@ -21,8 +21,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  // Keep the composer above the on-screen keyboard on mobile.
+  // Keep the composer above the on-screen keyboard on mobile (Android Chrome;
+  // iOS is handled by useVisualViewport).
   interactiveWidget: "resizes-content",
+  // Draw under the iPhone home indicator so env(safe-area-inset-bottom) is
+  // non-zero; the composer's footer pads itself by that inset.
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fafafa" },
     { media: "(prefers-color-scheme: dark)", color: "#09090b" },

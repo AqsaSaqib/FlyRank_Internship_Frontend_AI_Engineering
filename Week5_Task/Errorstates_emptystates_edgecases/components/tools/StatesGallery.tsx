@@ -38,7 +38,7 @@ export function StatesGallery() {
           <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
+              className="tap-target inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary"
             >
               <Icon name="chevron" className="size-4 rotate-180" />
               Back to chat
@@ -214,7 +214,7 @@ function LiveDemo() {
             type="button"
             onClick={() => play(SUCCESS)}
             disabled={playing}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
+            className="tap-target inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
           >
             <Icon name="refresh" className="size-3.5" />
             Play success
@@ -223,7 +223,7 @@ function LiveDemo() {
             type="button"
             onClick={() => play(FAILURE)}
             disabled={playing}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-50"
+            className="tap-target inline-flex h-8 items-center gap-1.5 rounded-lg border border-border px-3 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-50"
           >
             <Icon name="alert" className="size-3.5" />
             Play error

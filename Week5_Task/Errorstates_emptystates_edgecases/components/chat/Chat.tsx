@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDevLogChat } from "@/lib/chat/use-devlog-chat";
 import { useOnlineStatus } from "@/lib/chat/use-online-status";
 import { useStickToBottom } from "@/lib/chat/use-stick-to-bottom";
+import { useVisualViewport } from "@/lib/chat/use-visual-viewport";
 import type { DevLogUIMessage } from "@/lib/chat/types";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ToolActionsContext, type ToolActions } from "@/components/tools/ToolCard";
@@ -40,6 +41,8 @@ export function Chat() {
   const { scrollRef, contentRef, isAtBottom, scrollToBottom } = useStickToBottom();
   const composerRef = useRef<ComposerHandle>(null);
   const online = useOnlineStatus();
+  // iOS: size the shell to the visible area so the composer sits on the keyboard.
+  useVisualViewport();
   const sabotage = useSabotageMode();
   // The reply the user stopped, so it can show a "Stopped" badge.
   const [stoppedId, setStoppedId] = useState<string | null>(null);

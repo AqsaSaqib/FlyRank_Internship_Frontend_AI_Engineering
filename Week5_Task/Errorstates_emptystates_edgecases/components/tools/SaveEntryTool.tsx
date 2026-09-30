@@ -59,7 +59,7 @@ export function SaveEntryTool({ part }: { part: ToolPart<"saveLogEntry"> }) {
             <button
               type="button"
               onClick={() => respondToApproval(approvalId, true)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="tap-target inline-flex h-9 items-center gap-1.5 rounded-lg bg-primary px-3.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <Icon name="check" className="size-4" />
               Save entry
@@ -67,7 +67,7 @@ export function SaveEntryTool({ part }: { part: ToolPart<"saveLogEntry"> }) {
             <button
               type="button"
               onClick={() => respondToApproval(approvalId, false)}
-              className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3.5 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary"
+              className="tap-target inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3.5 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary"
             >
               Cancel
             </button>
