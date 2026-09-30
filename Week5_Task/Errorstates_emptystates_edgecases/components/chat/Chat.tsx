@@ -14,6 +14,7 @@ import { Composer, type ComposerHandle } from "./Composer";
 import { Icon } from "./icons";
 import { Message } from "./Message";
 import { OfflineBanner } from "./OfflineBanner";
+import { CrashOnce, SabotageBadge, useSabotageMode } from "./SabotageBadge";
 
 /** Placeholder for a reply that has no message yet (request sent, nothing streamed, or it failed first). */
 const PENDING_REPLY: DevLogUIMessage = { id: "pending", role: "assistant", parts: [] };
@@ -39,6 +40,7 @@ export function Chat() {
   const { scrollRef, contentRef, isAtBottom, scrollToBottom } = useStickToBottom();
   const composerRef = useRef<ComposerHandle>(null);
   const online = useOnlineStatus();
+  const sabotage = useSabotageMode();
   // The reply the user stopped, so it can show a "Stopped" badge.
   const [stoppedId, setStoppedId] = useState<string | null>(null);
   const busy = status === "submitted" || status === "streaming";
@@ -136,6 +138,7 @@ export function Chat() {
 
       <main className="relative min-h-0 flex-1">
         <h1 className="sr-only">DevLog Assistant</h1>
+        {sabotage === "crash" && <CrashOnce />}
         <div
           ref={scrollRef}
           // Focus target after Retry (the button unmounts); not in the tab order.
@@ -193,6 +196,7 @@ export function Chat() {
 
       <footer className="shrink-0 bg-background px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2">
         <div className="mx-auto max-w-3xl">
+          <SabotageBadge mode={sabotage} />
           <OfflineBanner offline={!online} />
           <Composer ref={composerRef} status={status} onSend={handleSend} onStop={handleStop} offline={!online} />
           <p className="mt-2 hidden text-center text-xs text-muted-foreground sm:block">

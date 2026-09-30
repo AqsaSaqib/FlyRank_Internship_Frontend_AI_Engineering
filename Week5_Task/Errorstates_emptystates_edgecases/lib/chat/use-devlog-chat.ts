@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, lastAssistantMessageIsCompleteWithApprovalResponses } from "ai";
 import { useCallback, useEffect, useState } from "react";
 
+import { SABOTAGE_HEADER, parseSabotage } from "@/lib/sabotage";
 import type { DevLogUIMessage, ToolErrorMode } from "./types";
 
 /**
@@ -30,7 +31,21 @@ const transport = new DefaultChatTransport<DevLogUIMessage>({
   api: "/api/chat",
   // Resolved per request, so it always reflects the current URL.
   body: () => ({ toolErrorMode: urlErrorMode() }),
+  // Same body the transport would build, plus the dev-only sabotage header.
+  // It rides along with NEW messages only (not Retry / Regenerate / approval
+  // follow-ups), so retrying a sabotaged reply shows the recovery.
+  prepareSendMessagesRequest: ({ id, messages, body, headers, trigger, messageId }) => {
+    const sabotage = trigger === "submit-message" && messages.at(-1)?.role === "user" ? urlSabotage() : null;
+    return {
+      body: { ...body, id, messages, trigger, messageId },
+      headers: sabotage ? { ...headers, [SABOTAGE_HEADER]: sabotage } : headers,
+    };
+  },
 });
+
+function urlSabotage() {
+  return parseSabotage(new URLSearchParams(window.location.search).get("sabotage"));
+}
 
 export function useDevLogChat() {
   const chat = useChat<DevLogUIMessage>({

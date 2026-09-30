@@ -8,6 +8,7 @@ import { primaryAction, secondaryAction } from "@/components/StatusCard";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { formatHours, formatWeekday, plural } from "@/components/tools/format";
 import { listEntries, type LogEntry } from "@/lib/devlog/entries";
+import { parseSabotage } from "@/lib/sabotage";
 
 export const metadata: Metadata = {
   title: "Your logs · DevLog",
@@ -21,7 +22,11 @@ export default async function LogsPage({ searchParams }: PageProps<"/logs">) {
   const params = await searchParams;
   const tag = typeof params.tag === "string" ? params.tag.trim().toLowerCase() : undefined;
 
-  const all = listEntries();
+  // Dev/preview only: ?sabotage=crash → app/error.tsx, ?sabotage=nologs → the first-run empty state.
+  const sabotage = parseSabotage(params.sabotage);
+  if (sabotage === "crash") throw new Error("Sabotage: the logs page crashed while rendering.");
+
+  const all = sabotage === "nologs" ? [] : listEntries();
   const entries = tag ? all.filter((e) => e.tags.includes(tag)) : all;
 
   return (

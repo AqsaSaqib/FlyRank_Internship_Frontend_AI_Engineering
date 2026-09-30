@@ -4,6 +4,7 @@ import { memo, useState } from "react";
 import { Streamdown } from "streamdown";
 
 import { messageText, type DevLogPart, type DevLogUIMessage } from "@/lib/chat/types";
+import { MalformedToolCall, type DynamicToolPart } from "@/components/tools/MalformedToolCall";
 import { ToolPart, isDevLogToolPart, type DevLogToolPart } from "@/components/tools/ToolPart";
 import { Avatar } from "./Avatar";
 import { ChatError } from "./ChatError";
@@ -51,7 +52,10 @@ function UserMessage({ message }: { message: DevLogUIMessage }) {
  * (text → tool → text is the usual shape of a multi-step reply). Reasoning is
  * collected separately into the "Thought process" disclosure.
  */
-type Block = { kind: "text"; key: string; text: string } | { kind: "tool"; key: string; part: DevLogToolPart };
+type Block =
+  | { kind: "text"; key: string; text: string }
+  | { kind: "tool"; key: string; part: DevLogToolPart }
+  | { kind: "malformed"; key: string; part: DynamicToolPart };
 
 function toBlocks(parts: DevLogPart[]): Block[] {
   const blocks: Block[] = [];
@@ -60,6 +64,9 @@ function toBlocks(parts: DevLogPart[]): Block[] {
       const prev = blocks.at(-1);
       if (prev?.kind === "text") prev.text += part.text;
       else if (part.text) blocks.push({ kind: "text", key: `text-${i}`, text: part.text });
+    } else if (part.type === "dynamic-tool") {
+      // A call that didn't match a typed tool (e.g. malformed input JSON).
+      blocks.push({ kind: "malformed", key: part.toolCallId, part });
     } else if (isDevLogToolPart(part)) {
       blocks.push({ kind: "tool", key: part.toolCallId, part });
     }
@@ -101,6 +108,8 @@ function AssistantMessage({ message, isLast, live, stopped, error, busy, online,
           {blocks.map((block) =>
             block.kind === "tool" ? (
               <ToolPart key={block.key} part={block.part} />
+            ) : block.kind === "malformed" ? (
+              <MalformedToolCall key={block.key} part={block.part} />
             ) : (
               <div key={block.key} className="animate-text-in">
                 <Streamdown

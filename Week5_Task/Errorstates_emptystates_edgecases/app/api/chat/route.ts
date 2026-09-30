@@ -10,6 +10,7 @@ import { z } from "zod";
 
 import { GENERATION, LIMITS, MODEL_IDS, getModel, getProvider, systemPrompt } from "@/lib/ai/config";
 import { errorPayload, errorResponse, logServerError, streamErrorText, toPublicError } from "@/lib/ai/errors";
+import { readSabotage, sabotageBody, sabotageModel, sabotageResponse } from "@/lib/ai/sabotage";
 import { TOOL_APPROVAL, TOOL_ERROR_MODES, createDevLogTools } from "@/lib/ai/tools";
 import { todayIso } from "@/lib/devlog/entries";
 import { messageText, type DevLogUIMessage } from "@/lib/chat/types";
@@ -104,8 +105,13 @@ async function handleChat(request: Request) {
     );
   }
 
+  // Dev/preview only (NEXT_PUBLIC_ENABLE_SABOTAGE): force a failure on purpose. See lib/sabotage.ts.
+  const sabotage = readSabotage(request);
+  const sabotaged = sabotageResponse(sabotage);
+  if (sabotaged) return sabotaged;
+
   const result = streamText({
-    model: getModel(provider),
+    model: sabotageModel(getModel(provider), sabotage),
     instructions: systemPrompt(todayIso()),
     // A reply stopped mid tool call leaves an incomplete part; skip it rather than fail.
     messages: await convertToModelMessages(messages, { tools, ignoreIncompleteToolCalls: true }),
@@ -120,7 +126,7 @@ async function handleChat(request: Request) {
     onError: () => {},
   });
 
-  return createUIMessageStreamResponse({
+  const response = createUIMessageStreamResponse({
     stream: toUIMessageStream<typeof tools, DevLogUIMessage>({
       stream: result.stream,
       // Continuing after an approval appends to the same assistant message.
@@ -130,4 +136,5 @@ async function handleChat(request: Request) {
       onError: streamErrorText,
     }),
   });
+  return sabotageBody(response, sabotage);
 }

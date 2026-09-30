@@ -54,6 +54,8 @@ export function toPublicError(error: unknown): ChatErrorPayload {
   return errorPayload("unknown");
 }
 
+const INVALID_TOOL_INPUT = "The assistant sent inputs the tool couldn't accept.";
+
 /**
  * The stream's `onError`: what the browser sees for any error while streaming.
  *
@@ -64,7 +66,13 @@ export function toPublicError(error: unknown): ChatErrorPayload {
 export function streamErrorText(error: unknown): string {
   if (error instanceof ToolFailure) return error.message;
   if (NoSuchToolError.isInstance(error)) return "The assistant tried to use a tool that doesn't exist.";
-  if (InvalidToolInputError.isInstance(error)) return "The assistant sent inputs the tool couldn't accept.";
+  if (InvalidToolInputError.isInstance(error)) return INVALID_TOOL_INPUT;
+  // A failed tool call's error, already stringified by the SDK (e.g. the
+  // tool-output-error after invalid input). It may quote parser internals.
+  if (typeof error === "string") {
+    logServerError("tool error", error, "unknown");
+    return /InvalidToolInput|Invalid input for tool/.test(error) ? INVALID_TOOL_INPUT : "The tool couldn't finish.";
+  }
 
   const payload = toPublicError(error);
   logServerError("stream error", error, payload.code);
@@ -76,7 +84,8 @@ export function logServerError(where: string, error: unknown, code: ChatErrorCod
   const cause = RetryError.isInstance(error) ? error.lastError : error;
   const name = cause instanceof Error ? cause.name : typeof cause;
   const status = APICallError.isInstance(cause) ? ` status=${cause.statusCode ?? "none"}` : "";
-  const message = cause instanceof Error ? ` "${cause.message.slice(0, 200)}"` : "";
+  const text = cause instanceof Error ? cause.message : typeof cause === "string" ? cause : "";
+  const message = text ? ` "${text.slice(0, 200)}"` : "";
   console.error(`[chat] ${where}: ${name}${status} code=${code}${message}`);
 }
 
