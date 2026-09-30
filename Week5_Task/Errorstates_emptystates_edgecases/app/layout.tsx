@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { InlineScript } from "@/components/InlineScript";
 import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
@@ -42,7 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <InlineScript html={themeScript} />
       </head>
       <body className="h-full font-sans">{children}</body>
     </html>

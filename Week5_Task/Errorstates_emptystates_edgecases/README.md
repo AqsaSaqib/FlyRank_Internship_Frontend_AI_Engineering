@@ -1,5 +1,17 @@
 # DevLog Assistant: Tool Results as UI (FE-07)
 
+> **Week 5 · Error states, empty states & edge cases.** This copy hardens the
+> chat for failure, empty, loading and mobile states. Every case, how to
+> trigger it and what the UI does is in
+> [docs/failure-inventory.md](docs/failure-inventory.md), including the
+> dev-only `?sabotage=` toggles (enabled by `NEXT_PUBLIC_ENABLE_SABOTAGE=true`).
+> A step-by-step demo is in [docs/recording-script.md](docs/recording-script.md).
+>
+> ```bash
+> npm run check      # lint + typecheck + production build
+> npm run test:e2e   # Playwright: mid-stream failure + retry, 429, offline, clean console
+> ```
+
 The AI chat for my capstone project **DevLog** (a journal where developers log their daily work), now with **generative UI**: the assistant can call server-side tools, and their results show up as real components (a list of entries, a chart, a confirm card) instead of text or JSON.
 
 This builds on the Week 4 streaming chat (`Week4_Task/Streaming_AI_Chat_Interface`). For this task I moved the chat from my own NDJSON stream to the **Vercel AI SDK v7** (`ai`, `@ai-sdk/react`), because typed tool parts, multi-step calls and tool approval all come from it.
