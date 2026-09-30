@@ -1,0 +1,213 @@
+@import "tailwindcss";
+@import "streamdown/styles.css";
+
+/* Let Tailwind see the utility classes Streamdown uses. */
+@source "../node_modules/streamdown/dist/*.js";
+
+/*
+ * Design tokens (DevLog palette: emerald brand on zinc neutrals).
+ * Names follow shadcn conventions because Streamdown's markdown styles
+ * (tables, code blocks) read the same variables.
+ */
+:root {
+  --background: #fafafa;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --input: #d4d4d8;
+  --primary: #047857;
+  --primary-hover: #065f46;
+  --primary-foreground: #ffffff;
+  --primary-soft: #ecfdf5;
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
+  --sidebar: #f4f4f5;
+  --radius: 0.625rem;
+  color-scheme: light;
+}
+
+/*
+ * Dark theme. The script in layout.tsx sets data-theme on <html> before the
+ * first paint (saved choice, else the system setting) and ThemeToggle flips
+ * it. The media query only matters if that script didn't run.
+ */
+:root[data-theme="dark"] {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card: #131316;
+  --card-foreground: #f4f4f5;
+  --muted: #1f1f23;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #3f3f46;
+  --primary: #34d399;
+  --primary-hover: #6ee7b7;
+  --primary-foreground: #052e21;
+  --primary-soft: #0b2a20;
+  --danger: #f87171;
+  --danger-soft: #2a1113;
+  --sidebar: #1f1f23;
+    color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --background: #09090b;
+    --foreground: #f4f4f5;
+    --card: #131316;
+    --card-foreground: #f4f4f5;
+    --muted: #1f1f23;
+    --muted-foreground: #a1a1aa;
+    --border: #27272a;
+    --input: #3f3f46;
+    --primary: #34d399;
+    --primary-hover: #6ee7b7;
+    --primary-foreground: #052e21;
+    --primary-soft: #0b2a20;
+    --danger: #f87171;
+    --danger-soft: #2a1113;
+    --sidebar: #1f1f23;
+    color-scheme: dark;
+  }
+}
+
+/* Tailwind `dark:` utilities (also used by Streamdown) follow the same attribute. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-sidebar: var(--sidebar);
+  --radius-lg: var(--radius);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Motion                                                                     */
+/*                                                                            */
+/* Durations are deliberate: 200ms for things that arrive (messages), 160ms   */
+/* for the thinking→text handoff so it reads as one continuous change, and    */
+/* 1.2s loops for "still working" signals. All of it is dropped for people    */
+/* who ask for reduced motion.                                                */
+/* -------------------------------------------------------------------------- */
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes text-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes thinking-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+}
+
+@utility animate-message-in {
+  animation: message-in 200ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@utility animate-text-in {
+  animation: text-in 160ms ease-out both;
+}
+
+@utility animate-pop-in {
+  animation: pop-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Tool cards: a state's new body fades in while the container's height animates. */
+@keyframes state-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+
+@utility animate-state-in {
+  animation: state-in 200ms ease-out both;
+}
+
+/* Loading placeholder bars (tool input still streaming). */
+@utility skeleton {
+  background: linear-gradient(90deg, var(--muted) 25%, var(--border) 50%, var(--muted) 75%) 0 0 / 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@utility thinking-dot {
+  animation: thinking-dot 1.2s ease-in-out infinite;
+}
+
+@utility text-shimmer {
+  background: linear-gradient(
+      90deg,
+      var(--muted-foreground) 35%,
+      var(--foreground) 50%,
+      var(--muted-foreground) 65%
+    )
+    0 0 / 200% 100%;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
