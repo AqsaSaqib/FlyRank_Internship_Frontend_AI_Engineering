@@ -19,6 +19,8 @@ export const CHAT_ERROR_CODES = [
   "too_long",
   // Upstream / transport: usually temporary, so these offer Retry.
   "rate_limited",
+  // The provider's quota (e.g. Gemini free tier) is used up; waiting seconds won't help.
+  "quota_exceeded",
   "overloaded",
   "network",
   "offline",

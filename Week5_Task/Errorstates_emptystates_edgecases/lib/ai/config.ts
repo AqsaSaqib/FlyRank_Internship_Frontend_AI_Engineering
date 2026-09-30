@@ -13,7 +13,8 @@ import "server-only";
 
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
-import type { LanguageModel } from "ai";
+import { APICallError, wrapLanguageModel, type LanguageModel } from "ai";
+import type { LanguageModelV4, LanguageModelV4StreamPart } from "@ai-sdk/provider";
 
 import { createMockModel } from "@/lib/ai/mock";
 
@@ -46,22 +47,85 @@ export function getProvider(): Provider | null {
 export const MODEL_IDS = {
   /** Override per environment with ANTHROPIC_MODEL. */
   anthropic: process.env.ANTHROPIC_MODEL ?? "claude-opus-5",
-  /** Google's alias for their newest Flash model. Override with GEMINI_MODEL. */
-  gemini: process.env.GEMINI_MODEL ?? "gemini-flash-latest",
+  /**
+   * Google's alias for their newest Flash-Lite model. Override with GEMINI_MODEL.
+   * Flash-Lite over Flash: faster, and the full Flash model often hits its
+   * free-tier quota (429) or is overloaded (503).
+   */
+  gemini: process.env.GEMINI_MODEL ?? "gemini-flash-lite-latest",
   mock: "mock",
 } as const;
+
+/**
+ * Tried once when the main model is rate limited or overloaded before it
+ * starts answering. Set GEMINI_FALLBACK_MODEL / ANTHROPIC_FALLBACK_MODEL to
+ * change it, or to "none" to turn the fallback off.
+ */
+const FALLBACK_MODEL_IDS = {
+  anthropic: process.env.ANTHROPIC_FALLBACK_MODEL ?? "claude-haiku-4-5",
+  gemini: process.env.GEMINI_FALLBACK_MODEL ?? "gemini-3.5-flash-lite",
+};
 
 /** The AI SDK model for a provider. Keys are read from the server env. */
 export function getModel(provider: Provider): LanguageModel {
   switch (provider) {
-    case "anthropic":
-      return createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })(MODEL_IDS.anthropic);
-    case "gemini":
+    case "anthropic": {
+      const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      return withFallback(anthropic(MODEL_IDS.anthropic), FALLBACK_MODEL_IDS.anthropic, anthropic);
+    }
+    case "gemini": {
       // The SDK defaults to GOOGLE_GENERATIVE_AI_API_KEY; DevLog has always used GEMINI_API_KEY.
-      return createGoogle({ apiKey: process.env.GEMINI_API_KEY })(MODEL_IDS.gemini);
+      const google = createGoogle({ apiKey: process.env.GEMINI_API_KEY });
+      return withFallback(google(MODEL_IDS.gemini), FALLBACK_MODEL_IDS.gemini, google);
+    }
     case "mock":
       return createMockModel();
   }
+}
+
+/** Busy or out of quota: worth trying another model rather than failing. */
+const shouldFallBack = (error: unknown) =>
+  APICallError.isInstance(error) && [429, 503, 529].includes(error.statusCode ?? 0);
+
+/**
+ * If the main model refuses the request (429 / 503 / 529) before streaming
+ * anything, send the same request to the fallback model once. Errors after
+ * the reply has started are not retried here: the user already sees partial
+ * text, and ChatError offers Retry.
+ */
+function withFallback(
+  primary: LanguageModelV4,
+  fallbackId: string,
+  create: (id: string) => LanguageModelV4,
+): LanguageModelV4 {
+  if (!fallbackId || fallbackId === "none" || fallbackId === primary.modelId) return primary;
+  const fallback = create(fallbackId);
+  return wrapLanguageModel({
+    model: primary,
+    middleware: {
+      specificationVersion: "v4",
+      wrapStream: async ({ doStream, params }) => {
+        try {
+          return await doStream();
+        } catch (error) {
+          if (!shouldFallBack(error) || params.abortSignal?.aborted) throw error;
+          const status = (error as APICallError).statusCode;
+          console.warn(`[chat] ${primary.modelId} returned ${status}; falling back to ${fallbackId}`);
+          const result = await fallback.doStream(params);
+          // The wrapper reports the primary's id; say which model really answered (shown under the reply).
+          const relabel = new TransformStream<LanguageModelV4StreamPart, LanguageModelV4StreamPart>({
+            transform(part, controller) {
+              controller.enqueue(part.type === "response-metadata" ? { ...part, modelId: fallbackId } : part);
+            },
+            start(controller) {
+              controller.enqueue({ type: "response-metadata", modelId: fallbackId });
+            },
+          });
+          return { ...result, stream: result.stream.pipeThrough(relabel) };
+        }
+      },
+    },
+  });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -84,6 +148,13 @@ export const GENERATION = {
    * answer after it are two. 5 leaves room for e.g. query → stats → answer.
    */
   maxSteps: 5,
+
+  /**
+   * SDK retries per model call (default 2). Kept at 1: a quota 429 won't
+   * clear in a few seconds, and each retry spends quota. The fallback model
+   * above handles "busy" better than retrying the same model.
+   */
+  maxRetries: 1,
 };
 
 /* -------------------------------------------------------------------------- */

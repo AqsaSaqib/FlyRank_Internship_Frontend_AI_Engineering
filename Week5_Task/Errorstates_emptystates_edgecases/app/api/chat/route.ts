@@ -119,6 +119,7 @@ async function handleChat(request: Request) {
     toolApproval: TOOL_APPROVAL,
     stopWhen: isStepCount(GENERATION.maxSteps),
     maxOutputTokens: GENERATION.maxOutputTokens,
+    maxRetries: GENERATION.maxRetries,
     reasoning: GENERATION.reasoning,
     abortSignal: request.signal,
     timeout: { totalMs: TIMEOUT_MS },
@@ -131,7 +132,13 @@ async function handleChat(request: Request) {
       stream: result.stream,
       // Continuing after an approval appends to the same assistant message.
       originalMessages: messages,
-      messageMetadata: ({ part }) => (part.type === "start" ? { model: MODEL_IDS[provider] } : undefined),
+      // The configured model at the start; the one that actually answered (maybe the fallback) per step.
+      messageMetadata: ({ part }) =>
+        part.type === "start"
+          ? { model: MODEL_IDS[provider] }
+          : part.type === "finish-step" && part.response.modelId
+            ? { model: part.response.modelId }
+            : undefined,
       // Mid-stream errors reach the client as the JSON payload; tool errors as plain text.
       onError: streamErrorText,
     }),

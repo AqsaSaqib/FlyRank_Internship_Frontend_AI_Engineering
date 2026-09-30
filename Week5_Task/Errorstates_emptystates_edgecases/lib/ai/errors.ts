@@ -18,6 +18,7 @@ const MESSAGES: Record<ChatErrorCode, string> = {
   invalid_request: "The conversation couldn't be read. Try starting a new chat.",
   too_long: "That message is too long.",
   rate_limited: "Too many requests right now.",
+  quota_exceeded: "The AI usage limit for this app has been reached.",
   overloaded: "The AI model is busy right now.",
   network: "The connection to the AI provider dropped.",
   offline: "You're offline.",
@@ -45,7 +46,14 @@ export function toPublicError(error: unknown): ChatErrorPayload {
 
   if (APICallError.isInstance(cause)) {
     const status = cause.statusCode;
-    if (status === 429) return errorPayload("rate_limited", { retryAfter: retryAfterSeconds(cause.responseHeaders) });
+    if (status === 429) {
+      const retryAfter = retryAfterSeconds(cause.responseHeaders) ?? retryDelaySeconds(cause.responseBody);
+      // A quota message with no short wait means the limit won't clear in seconds (e.g. a daily cap).
+      if (isQuotaBody(cause.responseBody) && (retryAfter == null || retryAfter > MAX_COUNTDOWN_SECONDS)) {
+        return errorPayload("quota_exceeded");
+      }
+      return errorPayload("rate_limited", { retryAfter });
+    }
     if (status === 503 || status === 529 || isOverloadedBody(cause.responseBody)) return errorPayload("overloaded");
     // No status at all: the request never got an HTTP answer (DNS, reset, timeout).
     if (status == null) return errorPayload("network");
@@ -101,6 +109,19 @@ function retryAfterSeconds(headers: Record<string, string> | undefined): number 
   if (Number.isFinite(seconds)) return Math.max(1, Math.ceil(seconds));
   const date = Date.parse(raw);
   return Number.isNaN(date) ? undefined : Math.max(1, Math.ceil((date - Date.now()) / 1000));
+}
+
+/** Longest wait worth a live countdown; beyond this it's treated as "limit reached". */
+const MAX_COUNTDOWN_SECONDS = 120;
+
+/** Gemini puts the wait in the body: `"retryDelay": "37s"` (google.rpc.RetryInfo). */
+function retryDelaySeconds(body: string | undefined): number | undefined {
+  const match = body?.match(/"retryDelay"\s*:\s*"(\d+(?:\.\d+)?)s"/);
+  return match ? Math.max(1, Math.ceil(Number(match[1]))) : undefined;
+}
+
+function isQuotaBody(body: string | undefined) {
+  return !!body && /exceeded your current quota|RESOURCE_EXHAUSTED|quota/i.test(body);
 }
 
 /** Anthropic reports overload as `overloaded_error`, sometimes mid-stream with no 529 status. */

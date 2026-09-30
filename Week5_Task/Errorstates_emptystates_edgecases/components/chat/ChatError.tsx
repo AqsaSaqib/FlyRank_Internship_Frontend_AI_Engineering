@@ -18,6 +18,11 @@ type Props = {
 
 const COPY: Record<ChatErrorCode, { icon: IconName; title: string; detail: string }> = {
   rate_limited: { icon: "clock", title: "Too many requests", detail: "The AI provider asked us to slow down." },
+  quota_exceeded: {
+    icon: "clock",
+    title: "AI limit reached",
+    detail: "The assistant has used up its AI quota for now. It resets automatically, so please try again later.",
+  },
   overloaded: { icon: "clock", title: "The AI model is busy", detail: "This usually clears up in a few seconds." },
   offline: { icon: "wifiOff", title: "You're offline", detail: "Reconnect to retry. Your conversation is saved." },
   network: { icon: "wifiOff", title: "Connection lost", detail: "The reply was cut off before it finished." },

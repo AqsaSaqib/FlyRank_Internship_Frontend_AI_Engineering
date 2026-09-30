@@ -27,6 +27,10 @@ GEMINI_API_KEY=your-key-here
 Get a free key at https://aistudio.google.com/apikey.
 No key? It still works with a built-in **mock** (fake) AI.
 
+The app uses **gemini-flash-lite-latest**. If Gemini says "too many
+requests" or "busy", it automatically tries a backup model
+(**gemini-3.5-flash-lite**), so you usually won't see an error.
+
 **3. Start the app:**
 
 ```bash
@@ -46,6 +50,7 @@ To stop it, press `Ctrl + C` in the terminal.
 | **No internet** | A small "You're offline" message. The Send button turns off, then turns back on by itself. |
 | **AI stops halfway** | The half-written answer stays, marked "Incomplete response", with a **Retry last response** button. |
 | **Too many requests (429)** | "Too many requests, try again in 10s" with a countdown. |
+| **AI quota used up** | The backup model answers instead. If both are used up: "AI limit reached, try again later". |
 | **AI is busy (529/503)** | "The AI model is busy" + Retry. |
 | **Broken tool answer** | A clear error card on the tool + Retry. |
 | **Empty message** | The Send button stays off. The server also rejects it. |
