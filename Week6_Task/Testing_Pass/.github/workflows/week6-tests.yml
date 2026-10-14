@@ -1,0 +1,99 @@
+# Week 6 "Testing Pass": unit + component tests, then end-to-end tests, for
+# Week6_Task/Testing_Pass. Make both jobs required status checks on main
+# (Settings → Branches) so a failing test blocks merging.
+#
+# No secrets: the chat runs on the scripted mock model (CHAT_PROVIDER=mock),
+# and the unit tests block any request to a real AI API.
+name: Week 6 tests
+
+on:
+  push:
+    paths:
+      - "Week6_Task/Testing_Pass/**"
+      - "Week6_Task/Testing_Pass/.github/workflows/week6-tests.yml"
+  pull_request:
+    paths:
+      - "Week6_Task/Testing_Pass/**"
+      - "Week6_Task/Testing_Pass/.github/workflows/week6-tests.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: week6-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: Week6_Task/Testing_Pass
+
+env:
+  CHAT_PROVIDER: mock
+
+jobs:
+  unit:
+    name: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Week6_Task/Testing_Pass/package-lock.json
+
+      - run: npm ci
+
+      # Also fails on getByTestId, querySelector, data-testid, class names
+      # or snapshots in test files (see eslint.config.mjs).
+      - name: Lint
+        run: npm run lint
+
+      - name: Belt and braces - no test IDs or DOM queries in tests
+        run: |
+          if grep -rnE "getByTestId|queryByTestId|findByTestId|getAllByTestId|querySelector|data-testid" \
+               --include="*.test.ts" --include="*.test.tsx" --include="*.spec.ts" \
+               --exclude-dir=node_modules . ; then
+            echo "::error::Tests must query by role, label or text, not test IDs or selectors."
+            exit 1
+          fi
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit and component tests
+        run: npm run test:run
+
+  e2e:
+    name: e2e
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: Week6_Task/Testing_Pass/package-lock.json
+
+      - run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end tests (production build, mock model)
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            Week6_Task/Testing_Pass/playwright-report/
+            Week6_Task/Testing_Pass/test-results/
+          retention-days: 14

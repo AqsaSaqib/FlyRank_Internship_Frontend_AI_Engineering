@@ -1,0 +1,368 @@
+/*
+ * MotionButton styles.
+ *
+ * Rule: only transform and opacity ever animate, so the browser can run every
+ * transition on the compositor without layout or paint work.
+ *
+ *  - Size:   the layout box is fixed by .mb-sizer (widest label). The visible
+ *            pill is 3 pieces: two circles (caps) and a middle rect. To become
+ *            a circle, the caps translateX to the center and the middle
+ *            scaleX(0)s. The middle's edges always sit at the caps' centers,
+ *            so the outline stays a perfect pill for every frame in between.
+ *  - Color:  each piece holds one fill per tone (base / success / danger).
+ *            Base never fades; success and danger fade in on top of it, so a
+ *            cross-fade never dips to transparent halfway.
+ *  - Labels: every state's content is stacked. "waiting" layers rest below,
+ *            the "active" one is centered, the "leaving" one slides up.
+ *
+ * Duration/easing tokens and the motion amounts (--mb-lift, --mb-slide, ...)
+ * come from lib/motion.ts. Reduced motion zeroes the amounts, so the same
+ * rules below become opacity-only fades.
+ */
+
+.mb {
+  --mb-h: 44px;
+  /* Set from JS after measuring: how far each cap travels to the center. */
+  --mb-shift: 0px;
+  /* 1 while the shape is a circle (and motion is allowed), else 0. */
+  --mb-c: 0;
+  --mb-danger-bg: var(--danger);
+  --mb-danger-fg: var(--danger-foreground);
+
+  position: relative;
+  display: inline-grid;
+  height: var(--mb-h);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.mb[data-size="lg"] {
+  --mb-h: 56px;
+  font-size: 17px;
+}
+
+.mb[data-shape="circle"] {
+  --mb-c: var(--mb-morph);
+}
+
+.mb[data-variant="solid"] {
+  --mb-base-bg: var(--primary);
+  --mb-base-fg: var(--primary-foreground);
+  --mb-success-bg: var(--success);
+  --mb-success-fg: var(--success-foreground);
+}
+
+.mb[data-variant="soft"] {
+  --mb-base-bg: var(--primary-tint);
+  --mb-base-fg: var(--primary-tint-foreground);
+  --mb-success-bg: var(--primary);
+  --mb-success-fg: var(--primary-foreground);
+}
+
+.mb[data-status="loading"] {
+  cursor: progress;
+}
+
+.mb[data-status="success"] {
+  cursor: default;
+}
+
+.mb[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* ---------------------------------------------------------------- layout */
+
+.mb-sizer {
+  display: grid;
+  visibility: hidden;
+  padding-inline: calc(var(--mb-h) * 0.5);
+}
+
+/* Both labels share one grid cell, so the sizer is as wide as the wider one. */
+.mb-sizer > * {
+  grid-area: 1 / 1;
+}
+
+.mb-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+.mb-icon {
+  display: inline-grid;
+  font-size: 1.15em;
+}
+
+.mb-surface,
+.mb-shake {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------------------------------------------------- hover, press, disabled */
+
+.mb-surface {
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .mb[data-interactive]:hover .mb-surface {
+    transform: translateY(var(--mb-lift));
+  }
+
+  .mb[data-interactive]:hover .mb-shadow {
+    opacity: 1;
+  }
+}
+
+/* Press down is the fastest thing in the system. Release uses --dur-fast (above). */
+.mb[data-interactive]:active .mb-surface,
+.mb[data-interactive][data-pressed] .mb-surface {
+  transform: scale(var(--mb-press));
+  transition-duration: var(--dur-instant);
+}
+
+.mb[aria-disabled="true"] .mb-surface {
+  opacity: 0.45;
+}
+
+.mb-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  box-shadow: var(--mb-shadow);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+/* ------------------------------------------------------------ pill pieces */
+
+.mb-piece {
+  position: absolute;
+  top: 0;
+  height: var(--mb-h);
+  transition: transform var(--dur-morph) var(--ease-in-out);
+}
+
+.mb-cap-l,
+.mb-cap-r {
+  width: var(--mb-h);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.mb-cap-l {
+  left: 0;
+  transform: translateX(calc(var(--mb-shift) * var(--mb-c)));
+}
+
+.mb-cap-r {
+  right: 0;
+  transform: translateX(calc(var(--mb-shift) * var(--mb-c) * -1));
+}
+
+.mb-mid {
+  left: calc(var(--mb-h) / 2);
+  right: calc(var(--mb-h) / 2);
+  transform: scaleX(calc(1 - var(--mb-c)));
+}
+
+/*
+ * Tone cross-fade without a dip. Success/danger sit above base and fade in or
+ * out over --dur-base. Base hides only after a tone fully covers it, and
+ * comes back instantly underneath a tone that is still opaque. So the pill
+ * never turns see-through halfway, and at rest exactly one fill is visible
+ * (stacked fills would leak the base color through the anti-aliased cap
+ * edges as a faint seam).
+ */
+.mb-fill {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.mb-fill[data-fill="base"] {
+  background: var(--mb-base-bg);
+  opacity: 1;
+  transition: opacity 0s;
+}
+
+.mb:not([data-tone="base"]) .mb-fill[data-fill="base"] {
+  opacity: 0;
+  transition: opacity 0s var(--dur-base);
+}
+
+.mb-fill[data-fill="success"] {
+  background: var(--mb-success-bg);
+}
+
+.mb-fill[data-fill="danger"] {
+  background: var(--mb-danger-bg);
+}
+
+.mb[data-tone="success"] .mb-fill[data-fill="success"],
+.mb[data-tone="danger"] .mb-fill[data-fill="danger"] {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------- content layers */
+
+.mb-content {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--mb-base-fg);
+  opacity: 0;
+  transform: translateY(var(--mb-slide));
+  transition:
+    opacity var(--dur-base) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.mb-content-success {
+  color: var(--mb-success-fg);
+}
+
+.mb-content-error {
+  color: var(--mb-danger-fg);
+}
+
+.mb-content[data-role="active"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* The outgoing layer leaves a bit faster than the new one arrives. */
+.mb-content[data-role="leaving"] {
+  transform: translateY(calc(var(--mb-slide) * -1));
+  transition-duration: var(--dur-fast);
+}
+
+/* --------------------------------------------------------------- spinner */
+
+.mb-spinner {
+  font-size: 1.3em;
+}
+
+.mb-content[data-role="active"] .mb-spinner,
+.mb-content[data-role="leaving"] .mb-spinner {
+  animation: var(--mb-busy-animation);
+}
+
+@keyframes mb-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes mb-pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* ------------------------------------------------------- success check */
+
+/* Spring scale: the only overshoot in the whole system. */
+.mb-pop {
+  display: grid;
+  transform: scale(var(--mb-pop-from));
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+
+/* Wipe reveal: the window slides right while the icon counter-slides left,
+   so the check stays put and appears to draw itself from left to right. */
+.mb-wipe {
+  display: grid;
+  overflow: hidden;
+  transform: translateX(var(--mb-wipe));
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.mb-wipe-inner {
+  display: grid;
+  transform: translateX(calc(var(--mb-wipe) * -1));
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.mb-content-success[data-role="active"] :is(.mb-pop, .mb-wipe, .mb-wipe-inner),
+.mb-content-success[data-role="leaving"] :is(.mb-pop, .mb-wipe, .mb-wipe-inner) {
+  transform: none;
+}
+
+.mb-check {
+  font-size: 1.4em;
+}
+
+/* ------------------------------------------------------------ focus ring */
+
+.mb-ring {
+  position: absolute;
+  top: -4px;
+  height: calc(var(--mb-h) + 8px);
+  border: 2px solid var(--ring);
+  border-radius: 9999px;
+  opacity: 0;
+  transform: scale(var(--mb-ring-from));
+  transition:
+    opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+}
+
+.mb-ring-pill {
+  left: -4px;
+  right: -4px;
+}
+
+.mb-ring-circle {
+  left: calc(50% - var(--mb-h) / 2 - 4px);
+  width: calc(var(--mb-h) + 8px);
+}
+
+/* Pill ring and circle ring cross-fade with the shape. */
+.mb:focus-visible .mb-ring-pill {
+  opacity: calc(1 - var(--mb-c));
+  transform: none;
+}
+
+.mb:focus-visible .mb-ring-circle {
+  opacity: var(--mb-c);
+  transform: none;
+}
+
+/* Windows High Contrast drops backgrounds and box-shadows: fall back to real outlines. */
+@media (forced-colors: active) {
+  .mb {
+    outline: 1px solid ButtonText;
+    border-radius: 9999px;
+  }
+
+  .mb:focus-visible {
+    outline: 3px solid Highlight;
+    outline-offset: 2px;
+  }
+}
