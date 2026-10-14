@@ -4,7 +4,7 @@ A **"Send message"** button for my capstone project **DevLog**. It shows what is
 
 A second button, **"Generate summary"**, uses the same component and the same animation settings, with a different style, text and icon.
 
-**Live demo:** _coming soon (Vercel link)_
+**Live demo:** https://devlog-motion-button.vercel.app/
 
 ---
 
