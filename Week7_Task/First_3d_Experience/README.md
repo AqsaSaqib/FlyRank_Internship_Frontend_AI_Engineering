@@ -2,7 +2,7 @@
 
 A 3D smart speaker you can play with in the browser. Built with React Three Fiber.
 
-**Live link:** _add after deploying_
+**Live link:** https://first-3d-experience.vercel.app/
 
 ## What you can do
 
