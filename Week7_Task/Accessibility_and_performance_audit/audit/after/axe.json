@@ -1,0 +1,54 @@
+{
+  "chat:light": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 42
+  },
+  "chat-convo:light": {
+    "violations": [],
+    "incomplete": [
+      "color-contrast (12)"
+    ],
+    "passes": 48
+  },
+  "logs:light": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 34
+  },
+  "states:light": {
+    "violations": [],
+    "incomplete": [
+      "aria-prohibited-attr (3)",
+      "color-contrast (10)"
+    ],
+    "passes": 42
+  },
+  "chat:dark": {
+    "violations": [],
+    "incomplete": [
+      "color-contrast (12)"
+    ],
+    "passes": 48
+  },
+  "chat-convo:dark": {
+    "violations": [],
+    "incomplete": [
+      "color-contrast (30)"
+    ],
+    "passes": 48
+  },
+  "logs:dark": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 34
+  },
+  "states:dark": {
+    "violations": [],
+    "incomplete": [
+      "aria-prohibited-attr (3)",
+      "color-contrast (10)"
+    ],
+    "passes": 42
+  }
+}

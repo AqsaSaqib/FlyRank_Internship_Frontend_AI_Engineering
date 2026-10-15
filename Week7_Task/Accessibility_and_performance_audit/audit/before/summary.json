@@ -1,0 +1,96 @@
+{
+  "chat": {
+    "performance": 69,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "FCP": "1.2 s",
+    "LCP": "2.1 s",
+    "TBT": "2,580 ms",
+    "CLS": "0",
+    "SI": "3.2 s",
+    "perfRuns": [
+      57,
+      69,
+      73
+    ],
+    "failing": [
+      "total-blocking-time (0.04) 2,580 ms",
+      "max-potential-fid (0) 1,830 ms",
+      "interactive (0.62) 6.2 s",
+      "mainthread-work-breakdown (0) 6.1 s",
+      "bootup-time (0) 4.0 s",
+      "render-blocking-resources (0.5) Est savings of 0 ms",
+      "unused-javascript (0.5) Est savings of 195 KiB",
+      "legacy-javascript (0.5) Est savings of 13 KiB",
+      "legacy-javascript-insight (0.5) Est savings of 14 KiB",
+      "network-dependency-tree-insight (0) ",
+      "render-blocking-insight (0.5) "
+    ]
+  },
+  "logs": {
+    "performance": 71,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "FCP": "1.1 s",
+    "LCP": "3.0 s",
+    "TBT": "1,140 ms",
+    "CLS": "0",
+    "SI": "1.4 s",
+    "perfRuns": [
+      61,
+      71,
+      74
+    ],
+    "failing": [
+      "largest-contentful-paint (0.78) 3.0 s",
+      "total-blocking-time (0.22) 1,140 ms",
+      "max-potential-fid (0.05) 550 ms",
+      "interactive (0.8) 4.7 s",
+      "mainthread-work-breakdown (0) 3.8 s",
+      "bootup-time (0) 1.9 s",
+      "largest-contentful-paint-element (0) 2,990 ms",
+      "render-blocking-resources (0.5) Est savings of 0 ms",
+      "unused-javascript (0) Est savings of 254 KiB",
+      "legacy-javascript (0) Est savings of 13 KiB",
+      "bf-cache (0) 2 failure reasons",
+      "legacy-javascript-insight (0) Est savings of 14 KiB",
+      "network-dependency-tree-insight (0) ",
+      "render-blocking-insight (0.5) "
+    ]
+  },
+  "states": {
+    "performance": 68,
+    "accessibility": 92,
+    "bestPractices": 100,
+    "seo": 100,
+    "FCP": "0.9 s",
+    "LCP": "3.1 s",
+    "TBT": "1,380 ms",
+    "CLS": "0",
+    "SI": "2.8 s",
+    "perfRuns": [
+      65,
+      68,
+      75
+    ],
+    "failing": [
+      "largest-contentful-paint (0.76) 3.1 s",
+      "total-blocking-time (0.16) 1,380 ms",
+      "max-potential-fid (0.05) 560 ms",
+      "interactive (0.85) 4.2 s",
+      "mainthread-work-breakdown (0) 8.4 s",
+      "bootup-time (0) 1.8 s",
+      "largest-contentful-paint-element (0) 3,050 ms",
+      "aria-prohibited-attr (0) ",
+      "color-contrast (0) ",
+      "render-blocking-resources (0.5) Est savings of 0 ms",
+      "unused-javascript (0) Est savings of 254 KiB",
+      "legacy-javascript (0.5) Est savings of 13 KiB",
+      "legacy-javascript-insight (0.5) Est savings of 14 KiB",
+      "network-dependency-tree-insight (0) ",
+      "render-blocking-insight (0.5) "
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "chat": {
+    "performance": 70,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "FCP": "1.5 s",
+    "LCP": "3.4 s",
+    "TBT": "780 ms",
+    "CLS": "0",
+    "SI": "4.2 s",
+    "perfRuns": [
+      63,
+      70,
+      72
+    ],
+    "failing": [
+      "largest-contentful-paint (0.68) 3.4 s",
+      "speed-index (0.77) 4.2 s",
+      "total-blocking-time (0.37) 780 ms",
+      "max-potential-fid (0.13) 440 ms",
+      "interactive (0.89) 3.8 s",
+      "mainthread-work-breakdown (0) 2.6 s",
+      "bootup-time (0) 1.3 s",
+      "largest-contentful-paint-element (0) 3,360 ms",
+      "render-blocking-resources (0.5) Est savings of 0 ms",
+      "unused-javascript (0) Est savings of 118 KiB",
+      "legacy-javascript (0) Est savings of 13 KiB",
+      "forced-reflow-insight (0) ",
+      "legacy-javascript-insight (0) Est savings of 14 KiB",
+      "network-dependency-tree-insight (0) ",
+      "render-blocking-insight (0) Est savings of 150 ms"
+    ]
+  },
+  "logs": {
+    "performance": 76,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "FCP": "0.8 s",
+    "LCP": "2.8 s",
+    "TBT": "830 ms",
+    "CLS": "0",
+    "SI": "2.1 s",
+    "perfRuns": [
+      70,
+      76,
+      88
+    ],
+    "failing": [
+      "largest-contentful-paint (0.82) 2.8 s",
+      "total-blocking-time (0.35) 830 ms",
+      "max-potential-fid (0.18) 390 ms",
+      "interactive (0.85) 4.3 s",
+      "mainthread-work-breakdown (0) 2.8 s",
+      "bootup-time (0) 1.6 s",
+      "largest-contentful-paint-element (0) 2,830 ms",
+      "render-blocking-resources (0.5) Est savings of 0 ms",
+      "unused-javascript (0) Est savings of 116 KiB",
+      "legacy-javascript (0) Est savings of 13 KiB",
+      "bf-cache (0) 2 failure reasons",
+      "legacy-javascript-insight (0) Est savings of 14 KiB",
+      "network-dependency-tree-insight (0) ",
+      "render-blocking-insight (0.5) "
+    ]
+  },
+  "states": {
+    "performance": 66,
+    "accessibility": 100,
+    "bestPractices": 100,
+    "seo": 100,
+    "FCP": "1.0 s",
+    "LCP": "3.3 s",
+    "TBT": "1,560 ms",
+    "CLS": "0",
+    "SI": "3.0 s",
+    "perfRuns": [
+      65,
+      66,
+      70
+    ],
+    "failing": [
+      "largest-contentful-paint (0.71) 3.3 s",
+      "total-blocking-time (0.13) 1,560 ms",
+      "max-potential-fid (0.01) 780 ms",
+      "interactive (0.87) 4.0 s",
+      "mainthread-work-breakdown (0) 9.1 s",
+      "bootup-time (0) 1.9 s",
+      "largest-contentful-paint-element (0) 3,260 ms",
+      "render-blocking-resources (0.5) Est savings of 0 ms",
+      "unused-javascript (0) Est savings of 52 KiB",
+      "legacy-javascript (0.5) Est savings of 13 KiB",
+      "legacy-javascript-insight (0.5) Est savings of 14 KiB",
+      "network-dependency-tree-insight (0) ",
+      "render-blocking-insight (0.5) "
+    ]
+  }
+}

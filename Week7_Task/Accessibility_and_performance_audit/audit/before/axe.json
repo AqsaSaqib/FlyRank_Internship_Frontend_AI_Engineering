@@ -1,0 +1,236 @@
+{
+  "chat:light": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 42
+  },
+  "chat-convo:light": {
+    "violations": [
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "help": "Elements must only use permitted ARIA attributes",
+        "nodes": [
+          "rect[x=\"26\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"118\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"210\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute."
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": [
+          ".animate-message-in.gap-3.flex:nth-child(4) > .pt-1.flex-1.min-w-0 > .mt-1.animate-text-in.gap-1 > .ml-auto.pl-2.text-muted-foreground\\/70 :: Fix any of the following: Element has insufficient color contrast of 2.68 (foreground color: #9a9aa0, background color: #fafafa, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        ]
+      }
+    ],
+    "incomplete": [
+      "color-contrast (12)"
+    ],
+    "passes": 48
+  },
+  "logs:light": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 34
+  },
+  "states:light": {
+    "violations": [
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "help": "Elements must only use permitted ARIA attributes",
+        "nodes": [
+          "rect[x=\"26\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"97.5\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"169\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"240.5\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute."
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": [
+          "section[aria-label=\"Couldn't search your logs\"] > .items-start.pt-3 > .flex-1.min-w-0 > .animate-text-in.leading-5 :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't search your logs\"] > .transition-\\[height\\].ease-out.overflow-hidden > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-3[role=\"alert\"] > div:nth-child(2) > .mb-1\\.5.font-medium :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't search your logs\"] > .transition-\\[height\\].ease-out.overflow-hidden > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-3[role=\"alert\"] > .gap-2.items-center.flex-wrap > p :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't calculate your stats\"] > .items-start.pt-3 > .flex-1.min-w-0 > .animate-text-in.leading-5 :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't calculate your stats\"] > .transition-\\[height\\].ease-out.overflow-hidden > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-3[role=\"alert\"] > div:nth-child(2) > .mb-1\\.5.font-medium :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't calculate your stats\"] > .transition-\\[height\\].ease-out.overflow-hidden > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-3[role=\"alert\"] > .gap-2.items-center.flex-wrap > p :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.26 (foreground color: #a8a8ad, background color: #fafafa, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(3) :: Fix any of the following: Element has insufficient color contrast of 2.26 (foreground color: #a8a8ad, background color: #fafafa, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(5) :: Fix any of the following: Element has insufficient color contrast of 2.26 (foreground color: #a8a8ad, background color: #fafafa, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(6) :: Fix any of the following: Element has insufficient color contrast of 2.26 (foreground color: #a8a8ad, background color: #fafafa, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(7) :: Fix any of the following: Element has insufficient color contrast of 2.26 (foreground color: #a8a8ad, background color: #fafafa, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.51 (foreground color: #63ad97, background color: #f2fcf7, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 2.51 (foreground color: #63ad97, background color: #f2fcf7, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(9) :: Fix any of the following: Element has insufficient color contrast of 2.26 (foreground color: #a8a8ad, background color: #fafafa, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't save your entry\"] > .items-start.pt-3 > .flex-1.min-w-0 > .animate-text-in.leading-5 :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't save your entry\"] > .transition-\\[height\\].ease-out.overflow-hidden > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-3[role=\"alert\"] > div:nth-child(2) > .mb-1\\.5.font-medium :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.24 (foreground color: #a9a7ac, background color: #fcf7f7, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(3) :: Fix any of the following: Element has insufficient color contrast of 2.24 (foreground color: #a9a7ac, background color: #fcf7f7, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(5) :: Fix any of the following: Element has insufficient color contrast of 2.24 (foreground color: #a9a7ac, background color: #fcf7f7, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(6) :: Fix any of the following: Element has insufficient color contrast of 2.24 (foreground color: #a9a7ac, background color: #fcf7f7, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(7) :: Fix any of the following: Element has insufficient color contrast of 2.24 (foreground color: #a9a7ac, background color: #fcf7f7, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 2.49 (foreground color: #64ac96, background color: #f3f9f4, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 2.49 (foreground color: #64ac96, background color: #f3f9f4, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(9) :: Fix any of the following: Element has insufficient color contrast of 2.24 (foreground color: #a9a7ac, background color: #fcf7f7, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "section[aria-label=\"Couldn't save your entry\"] > .transition-\\[height\\].ease-out.overflow-hidden > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-3[role=\"alert\"] > .gap-2.items-center.flex-wrap > p :: Fix any of the following: Element has insufficient color contrast of 4.41 (foreground color: #71717a, background color: #fef2f2, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        ]
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "nodes": [
+          ".max-w-2xl.mx-auto.mt-2 > .my-3.transition-\\[border-color\\,background-color\\,box-shadow\\][aria-label=\"Found 3 entries\"] :: Fix any of the following: The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "help": "Scrollable region must have keyboard access",
+        "nodes": [
+          "section[aria-labelledby=\"queryLogs-heading\"] > .lg\\:grid-cols-2.mt-4.gap-4 > .p-4:nth-child(1) > .mt-1 > pre :: Fix any of the following: Element should have focusable content Element should be focusable",
+          "section[aria-labelledby=\"getLogStats-heading\"] > .lg\\:grid-cols-2.mt-4.gap-4 > .p-4:nth-child(1) > .mt-1 > pre :: Fix any of the following: Element should have focusable content Element should be focusable",
+          "section[aria-labelledby=\"saveLogEntry-heading\"] > .lg\\:grid-cols-2.mt-4.gap-4 > .p-4:nth-child(1) > .mt-1 > pre :: Fix any of the following: Element should have focusable content Element should be focusable"
+        ]
+      }
+    ],
+    "incomplete": [
+      "color-contrast (10)"
+    ],
+    "passes": 41
+  },
+  "chat:dark": {
+    "violations": [
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "help": "Elements must only use permitted ARIA attributes",
+        "nodes": [
+          "rect[x=\"26\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"118\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"210\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute."
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": [
+          ".animate-message-in.gap-3.flex:nth-child(4) > .pt-1.flex-1.min-w-0 > .mt-1.animate-text-in.gap-1 > .ml-auto.pl-2.text-muted-foreground\\/70 :: Fix any of the following: Element has insufficient color contrast of 4.22 (foreground color: #73737a, background color: #09090b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        ]
+      }
+    ],
+    "incomplete": [
+      "color-contrast (12)"
+    ],
+    "passes": 48
+  },
+  "chat-convo:dark": {
+    "violations": [
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "help": "Elements must only use permitted ARIA attributes",
+        "nodes": [
+          ".animate-message-in.gap-3.flex:nth-child(4) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] > .transition-\\[height\\].ease-out.duration-200 > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-4 > figure:nth-child(2) > .relative > svg[width=\"306\"][height=\"140\"][role=\"img\"] > g:nth-child(4) > rect[x=\"26\"][aria-label=\"Oct 1 – Oct 7: 6 entries, 13h\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          ".animate-message-in.gap-3.flex:nth-child(4) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] > .transition-\\[height\\].ease-out.duration-200 > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-4 > figure:nth-child(2) > .relative > svg[width=\"306\"][height=\"140\"][role=\"img\"] > g:nth-child(5) > rect[x=\"118\"][aria-label=\"Oct 8 – Oct 14: 5 entries, 15h\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          ".animate-message-in.gap-3.flex:nth-child(4) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] > .transition-\\[height\\].ease-out.duration-200 > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-4 > figure:nth-child(2) > .relative > svg[width=\"306\"][height=\"140\"][role=\"img\"] > g:nth-child(6) > rect[x=\"210\"][aria-label=\"Oct 15: 1 entry, 3h\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          ".animate-message-in.gap-3.flex:nth-child(8) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] > .transition-\\[height\\].ease-out.duration-200 > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-4 > figure:nth-child(2) > .relative > svg[width=\"306\"][height=\"140\"][role=\"img\"] > g:nth-child(4) > rect[x=\"26\"][aria-label=\"Oct 1 – Oct 7: 6 entries, 13h\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          ".animate-message-in.gap-3.flex:nth-child(8) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] > .transition-\\[height\\].ease-out.duration-200 > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-4 > figure:nth-child(2) > .relative > svg[width=\"306\"][height=\"140\"][role=\"img\"] > g:nth-child(5) > rect[x=\"118\"][aria-label=\"Oct 8 – Oct 14: 5 entries, 15h\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          ".animate-message-in.gap-3.flex:nth-child(8) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] > .transition-\\[height\\].ease-out.duration-200 > .pb-3\\.5.pt-2\\.5.px-3\\.5 > .animate-state-in > .space-y-4 > figure:nth-child(2) > .relative > svg[width=\"306\"][height=\"140\"][role=\"img\"] > g:nth-child(6) > rect[x=\"210\"][aria-label=\"Oct 15: 1 entry, 3h\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute."
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": [
+          ".animate-message-in.gap-3.flex:nth-child(8) > .pt-1.flex-1.min-w-0 > .mt-1.animate-text-in.gap-1 > .ml-auto.pl-2.text-muted-foreground\\/70 :: Fix any of the following: Element has insufficient color contrast of 4.22 (foreground color: #73737a, background color: #09090b, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        ]
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "nodes": [
+          ".animate-message-in.gap-3.flex:nth-child(2) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Found 4 entries\"] :: Fix any of the following: The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable",
+          ".animate-message-in.gap-3.flex:nth-child(4) > .pt-1.flex-1.min-w-0 > div:nth-child(3) > section[aria-label=\"Your activity, Oct 1 – Oct 15\"] :: Fix any of the following: The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+        ]
+      }
+    ],
+    "incomplete": [
+      "color-contrast (30)"
+    ],
+    "passes": 48
+  },
+  "logs:dark": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 34
+  },
+  "states:dark": {
+    "violations": [
+      {
+        "id": "aria-prohibited-attr",
+        "impact": "serious",
+        "help": "Elements must only use permitted ARIA attributes",
+        "nodes": [
+          "rect[x=\"26\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"97.5\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"169\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute.",
+          "rect[x=\"240.5\"] :: Fix all of the following: aria-label attribute cannot be used on \"rect\" elements with no valid role attribute."
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": [
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 3.4 (foreground color: #67676d, background color: #0f0f11, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(3) :: Fix any of the following: Element has insufficient color contrast of 3.4 (foreground color: #67676d, background color: #0f0f11, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(5) :: Fix any of the following: Element has insufficient color contrast of 3.4 (foreground color: #67676d, background color: #0f0f11, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(6) :: Fix any of the following: Element has insufficient color contrast of 3.4 (foreground color: #67676d, background color: #0f0f11, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(7) :: Fix any of the following: Element has insufficient color contrast of 3.4 (foreground color: #67676d, background color: #0f0f11, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 3.97 (foreground color: #268d68, background color: #10231e, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 3.97 (foreground color: #268d68, background color: #10231e, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          ".animate-state-in > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(9) :: Fix any of the following: Element has insufficient color contrast of 3.4 (foreground color: #67676d, background color: #0f0f11, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 3.36 (foreground color: #69656c, background color: #160c0e, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(3) :: Fix any of the following: Element has insufficient color contrast of 3.36 (foreground color: #69656c, background color: #160c0e, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(5) :: Fix any of the following: Element has insufficient color contrast of 3.36 (foreground color: #69656c, background color: #160c0e, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(6) :: Fix any of the following: Element has insufficient color contrast of 3.36 (foreground color: #69656c, background color: #160c0e, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(7) :: Fix any of the following: Element has insufficient color contrast of 3.36 (foreground color: #69656c, background color: #160c0e, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(1) :: Fix any of the following: Element has insufficient color contrast of 3.95 (foreground color: #288b67, background color: #17201b, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dd:nth-child(8) > .gap-1[aria-label=\"Tags\"] > .px-1\\.5.py-0\\.5.rounded-md:nth-child(2) :: Fix any of the following: Element has insufficient color contrast of 3.95 (foreground color: #288b67, background color: #17201b, font size: 8.3pt (11px), font weight: normal). Expected contrast ratio of 4.5:1",
+          "div:nth-child(2) > .opacity-60.grid-cols-\\[4\\.5rem_1fr\\].gap-y-1\\.5 > dt:nth-child(9) :: Fix any of the following: Element has insufficient color contrast of 3.36 (foreground color: #69656c, background color: #160c0e, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+        ]
+      },
+      {
+        "id": "landmark-unique",
+        "impact": "moderate",
+        "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+        "nodes": [
+          ".max-w-2xl.mx-auto.mt-2 > .my-3.transition-\\[border-color\\,background-color\\,box-shadow\\][aria-label=\"Found 3 entries\"] :: Fix any of the following: The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+        ]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "help": "Scrollable region must have keyboard access",
+        "nodes": [
+          "section[aria-labelledby=\"queryLogs-heading\"] > .lg\\:grid-cols-2.mt-4.gap-4 > .p-4:nth-child(1) > .mt-1 > pre :: Fix any of the following: Element should have focusable content Element should be focusable",
+          "section[aria-labelledby=\"getLogStats-heading\"] > .lg\\:grid-cols-2.mt-4.gap-4 > .p-4:nth-child(1) > .mt-1 > pre :: Fix any of the following: Element should have focusable content Element should be focusable",
+          "section[aria-labelledby=\"saveLogEntry-heading\"] > .lg\\:grid-cols-2.mt-4.gap-4 > .p-4:nth-child(1) > .mt-1 > pre :: Fix any of the following: Element should have focusable content Element should be focusable"
+        ]
+      }
+    ],
+    "incomplete": [
+      "color-contrast (10)"
+    ],
+    "passes": 41
+  }
+}
