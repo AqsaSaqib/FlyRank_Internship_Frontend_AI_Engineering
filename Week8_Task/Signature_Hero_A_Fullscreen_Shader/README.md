@@ -2,7 +2,7 @@
 
 A fullscreen hero for my portfolio. The background is a fragment shader I wrote in GLSL. It shows slow, silky folds in my own colours, and they lean toward your cursor.
 
-**Live link:** _add after deploying_
+**Live link:** https://fullscreen-shader.vercel.app/
 
 ## Shader
 
