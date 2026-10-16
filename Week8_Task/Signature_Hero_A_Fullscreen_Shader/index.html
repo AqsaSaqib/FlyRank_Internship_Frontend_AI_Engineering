@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aqsa Saqib · Frontend &amp; AI Engineer</title>
+    <meta
+      name="description"
+      content="Aqsa Saqib, frontend engineer building calm, fast interfaces for AI products."
+    />
+    <meta name="theme-color" content="#05060f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav">
+      <a class="nav__mark" href="#top" aria-label="Aqsa Saqib, home">AS</a>
+      <nav aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <!-- Decorative: the shader is mood, the text carries the meaning. -->
+        <canvas id="hero-canvas" class="hero__canvas" aria-hidden="true"></canvas>
+
+        <div class="hero__content">
+          <p class="hero__eyebrow">Frontend &amp; AI Engineering</p>
+          <h1 id="hero-title" class="hero__title">Aqsa <em>Saqib</em></h1>
+          <p class="hero__intro">
+            I build calm, fast interfaces for AI products, from the first pixel to the last
+            millisecond.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--solid" href="#work">See my work</a>
+            <a class="btn btn--ghost" href="#contact">Get in touch</a>
+          </div>
+        </div>
+
+        <div class="hero__meta">
+          <button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false">
+            <svg viewBox="0 0 16 16" aria-hidden="true" class="icon-pause">
+              <rect x="3.5" y="3" width="3" height="10" rx="1" />
+              <rect x="9.5" y="3" width="3" height="10" rx="1" />
+            </svg>
+            <svg viewBox="0 0 16 16" aria-hidden="true" class="icon-play">
+              <path d="M5 3.2v9.6a.6.6 0 0 0 .9.5l7.6-4.8a.6.6 0 0 0 0-1L5.9 2.7a.6.6 0 0 0-.9.5Z" />
+            </svg>
+            <span>Pause motion</span>
+          </button>
+          <p class="hero__caption">Hand-written GLSL · move your cursor</p>
+        </div>
+      </section>
+
+      <section class="section" id="how" aria-labelledby="how-title">
+        <p class="section__eyebrow">Behind the hero</p>
+        <h2 id="how-title">One fragment shader, nine small ideas</h2>
+        <p class="section__lead">
+          The background above is a single GLSL program that runs once for every pixel, every
+          frame. It only knows three things: where the pixel is, what time it is, and where your
+          cursor is.
+        </p>
+        <ol class="steps">
+          <li>
+            <h3>Coordinates</h3>
+            <p>
+              <code>u_resolution</code> turns a pixel into a 0–1 position, then into centred,
+              aspect-correct space so nothing stretches on a phone.
+            </p>
+          </li>
+          <li>
+            <h3>Silk from noise</h3>
+            <p>
+              Five layers of value noise, fed back into themselves twice (domain warping). That
+              feedback is what makes the folds look like fabric.
+            </p>
+          </li>
+          <li>
+            <h3>Time</h3>
+            <p>
+              <code>u_time</code> slides the two warp layers in opposite directions, very slowly.
+              It reads as rolling, not scrolling.
+            </p>
+          </li>
+          <li>
+            <h3>Cursor lean</h3>
+            <p>
+              <code>u_mouse</code> bends space toward your pointer with a soft falloff, so the
+              silk is tugged rather than painted on. JavaScript eases it so it never jerks.
+            </p>
+          </li>
+          <li>
+            <h3>Readable by design</h3>
+            <p>
+              A dark veil is baked into the shader right where the headline sits, plus a vignette
+              and a pinch of film grain to stop colour banding.
+            </p>
+          </li>
+          <li>
+            <h3>Polite to your device</h3>
+            <p>
+              Pixel ratio capped at 1.5, resolution drops if frames get slow, and it stops drawing
+              when the tab is hidden, the hero is off-screen, or you ask for reduced motion.
+            </p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section" id="work" aria-labelledby="work-title">
+        <p class="section__eyebrow">Selected work</p>
+        <h2 id="work-title">Recent builds</h2>
+        <ul class="work">
+          <li>
+            <a href="https://first-3d-experience.vercel.app/" target="_blank" rel="noopener">
+              <span class="work__title">Aura One</span>
+              <span class="work__desc">A 3D smart-speaker configurator in React Three Fiber.</span>
+              <span class="work__arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/AqsaSaqib/FlyRank_Internship_Frontend_AI_Engineering"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="work__title">FlyRank internship</span>
+              <span class="work__desc">Eight weeks of frontend and AI engineering tasks.</span>
+              <span class="work__arrow" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="footer" id="contact">
+      <h2>Let’s build something calm.</h2>
+      <p>
+        <a href="https://github.com/AqsaSaqib" target="_blank" rel="noopener">GitHub</a>
+      </p>
+      <small>© <span id="year">2026</span> Aqsa Saqib</small>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
