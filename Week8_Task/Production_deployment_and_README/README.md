@@ -5,7 +5,7 @@ notes and it writes a clean log entry. It can also search your past entries,
 chart your hours, and save a new entry once you approve it. Replies stream in
 as they're written, and tool results show up as cards.
 
-**Live:** https://REPLACE-WITH-PRODUCTION-URL.vercel.app <!-- TODO: paste after `vercel --prod` -->
+**Live:** https://prod-deployment-five.vercel.app
 
 | Chat | Rate limited | Phone |
 | --- | --- | --- |

@@ -9,7 +9,7 @@ Replies stream in word by word, tool results show up as cards (lists, charts,
 a save form), and every failure has a designed state: offline, rate limited,
 the model busy, a reply cut off halfway, an empty reply.
 
-**Live:** https://REPLACE-WITH-PRODUCTION-URL.vercel.app <!-- TODO: paste the production URL after `vercel --prod` -->
+**Live:** https://prod-deployment-five.vercel.app
 
 | Welcome | Tool card (search results) |
 | --- | --- |
